@@ -4,6 +4,8 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
+    "allowJs": true,
+    "noImplicitAny": false,
     "importHelpers": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
@@ -30,7 +32,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.vue",
+    "src/**/*.vue", "src/router/index.js", "src/shims-vue.d.js" "src/main.js",
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],

@@ -22,11 +22,19 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import googleMap from 'googlemaps-vue3'
+
+const googleMapOption = {
+    apiKey: 'AIzaSyA6hlb5UYJmQ9mctsn_p6D6ZbriORkikiY',
+
+  
+}
 
 const app = createApp(App)
   .use(IonicVue)
   .use(router);
   
+  app.use(googleMap, googleMapOption);
 router.isReady().then(() => {
   app.mount('#app');
 });
