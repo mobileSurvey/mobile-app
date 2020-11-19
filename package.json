@@ -10,12 +10,14 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@capacitor/android": "^2.4.2",
     "@capacitor/core": "2.4.2",
     "@ionic-native/core": "^5.29.0",
     "@ionic-native/google-maps": "^5.5.0",
     "@ionic/vue": "^5.4.0",
     "@ionic/vue-router": "^5.4.0",
     "core-js": "^3.6.5",
+    "google-maps-api-loader": "^1.1.1",
     "googlemaps-vue3": "^1.1.0",
     "vue": "^3.0.0-0",
     "vue-router": "^4.0.0-0",

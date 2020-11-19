@@ -16,9 +16,10 @@
       </ion-header>
     
       <!-- <ExploreContainer name="Tab 1 page" /> -->
-     <GoogleMap
-    :center="{ lat: -7.1234, lng: 110.1234 }"
-    :zoom="4"
+     <Gmap
+ 
+    :center="{ lat: -7.333363311313447, lng: 110.50523502681817 }"
+    :zoom="8"
     :clickActive="true"
     :getLatLng="true"
     :mapType="'hybrid'"
@@ -57,11 +58,11 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 // import ExploreContainer from '../components/ExploreContainer.vue';
 
-
+import Gmap from '../components/Gmap.vue';
 
 export default  {
   name: 'Tab1',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Gmap },
   data(){
     return{
        srcc : '../assets/Fauzan.jpg'
