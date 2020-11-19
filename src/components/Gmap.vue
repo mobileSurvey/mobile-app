@@ -1,5 +1,9 @@
 <script>
 /* global google */
+import { Plugins } from '@capacitor/core';
+
+const { Geolocation } = Plugins;
+
 export default {
   props: {
     center: {
@@ -32,17 +36,10 @@ export default {
   },
   inject: ["apiKey", "tileUrl", "layerId"],
   created() {
-    const googleMapScript = document.createElement("SCRIPT");
-    googleMapScript.setAttribute(
-      "src",
-      `https://maps.googleapis.com/maps/api/js?key=AIzaSyA6hlb5UYJmQ9mctsn_p6D6ZbriORkikiY&libraries=&v=weekly&sensor=false`
-    );
-    googleMapScript.setAttribute("defer", "");
-    googleMapScript.setAttribute("async", "");
-    document.head.appendChild(googleMapScript);
+
   },
   watch: {
-    center: function (val) {
+    center: async function (val) {
       if (this.map == null) {
       // //    this.map = new google.maps.Map(document.getElementById("map"), {
       // //   center: this.center,
@@ -52,35 +49,11 @@ export default {
       // );
       } else {
         this.map.setCenter(new google.maps.LatLng(val.lat, val.lng));
-
-        if (this.markers.length > 0) {
-          this.markers.forEach((marker) => {
-            console.log(marker);
-            let mapMarker = new google.maps.Marker({
-              position: new google.maps.LatLng(marker.lat, marker.lng),
-              draggable: marker.draggable,
-              map: this.map,
-              title: marker.title,
-            });
-
-            if (marker.infoWindow != null) {
-              var infowindow = new google.maps.InfoWindow({
-                content: marker.infoWindow,
-              });
-            }
-
-            if (this.clickActive) {
-              mapMarker.addListener("click", function (mapEvent) {
-                if (this.getLatLng) {
-                  console.log(mapEvent.latLng.toString());
-                }
-                if (marker.infoWindow != null) {
-                  infowindow.open(this.map, mapMarker);
-                }
-              });
-            }
-          });
-        }
+          let coordinates = await Geolocation.getCurrentPosition();
+    console.log('Current', coordinates.coords.latitude, coordinates.coords.longitude);
+       this.map.panTo(new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude));
+        this.map.setZoom(17);
+       
       }
     },
   },
@@ -89,16 +62,46 @@ export default {
       map: null,
     };
   },
-  mounted() {
-    window.addEventListener("load", () => {
+  methods:{
+    inisialisasiMap(){
+    //       const googleMapScript = document.createElement("SCRIPT");
+    // googleMapScript.setAttribute(
+    //   "src",
+    //   `https://maps.googleapis.com/maps/api/js?key=AIzaSyA6hlb5UYJmQ9mctsn_p6D6ZbriORkikiY&libraries=&v=weekly&sensor=true`
+    // );
+    // googleMapScript.setAttribute("defer", "");
+    // googleMapScript.setAttribute("async", "");
+    // document.head.appendChild(googleMapScript);
+         // let map = this.map;
+    // window.addEventListener("load", async () => {
       this.map = new google.maps.Map(document.getElementById("map"), {
         center: this.center,
         zoom: this.zoom,
         mapTypeId: this.mapType,
       });
+
+// posisi sekarang
+     window.setTimeout(async () => {
+         let coordinates = await Geolocation.getCurrentPosition();
+    console.log('Current', coordinates.coords.latitude, coordinates.coords.longitude);
+       this.map.panTo(new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude));
+        this.map.setZoom(17);
+      let mark=   new google.maps.Marker({
+            position: new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude),
+             animation: google.maps.Animation.DROP,
+            map: this.map
+          });
+          mark.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+    }, 1000);
+      // if(coordinates){
+        
+      //  google.maps.event.trigger(this.map, 'resize');
+      // }
   this.map.addListener("center_changed", () => {
     // 3 seconds after the center of the map has changed, pan back to the
     // marker.
+    
+   
     console.log(this.map.getCenter().lat())
 
   });
@@ -179,7 +182,12 @@ export default {
           }
         });
       }
-    });
+    // });
+    }
+  },
+   mounted() {
+  
+   this.inisialisasiMap();
   },
 };
 </script>

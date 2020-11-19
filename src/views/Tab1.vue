@@ -18,7 +18,7 @@
       <!-- <ExploreContainer name="Tab 1 page" /> -->
      <Gmap
  
-    :center="{ lat: -7.333363311313447, lng: 110.50523502681817 }"
+    :center="{ lat: -8.333363311313447, lng: 110.50523502681817 }"
     :zoom="8"
     :clickActive="true"
     :getLatLng="true"
