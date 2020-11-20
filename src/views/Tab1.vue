@@ -1,24 +1,13 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Tab 1</ion-title>
-      </ion-toolbar>
-    </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">{{srcc}}</ion-title>
-          <!-- <img :src="require(`../assets/Fauzan.jpg`)"/> 
-          <ion-img :src="require(`../assets/Fauzan.jpg`)"></ion-img> -->
-     
-        </ion-toolbar>
-      </ion-header>
+      
     
       <!-- <ExploreContainer name="Tab 1 page" /> -->
-     <GoogleMap
-    :center="{ lat: -7.1234, lng: 110.1234 }"
-    :zoom="4"
+     <Gmap
+ 
+    :center="{ lat: -8.333363311313447, lng: 110.50523502681817 }"
+    :zoom="8"
     :clickActive="true"
     :getLatLng="true"
     :mapType="'hybrid'"
@@ -54,14 +43,14 @@
 </template>
 
 <script >
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonContent } from '@ionic/vue';
 // import ExploreContainer from '../components/ExploreContainer.vue';
 
-
+import Gmap from '../components/Gmap.vue';
 
 export default  {
   name: 'Tab1',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
+  components: { IonContent, IonPage, Gmap },
   data(){
     return{
        srcc : '../assets/Fauzan.jpg'
