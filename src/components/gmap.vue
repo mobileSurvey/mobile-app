@@ -60,6 +60,7 @@ export default {
   data() {
     return {
       map: null,
+      loaded: false
     };
   },
   methods:{
@@ -79,7 +80,7 @@ export default {
         zoom: this.zoom,
         mapTypeId: this.mapType,
       });
-
+  this.loaded = true;
 // posisi sekarang
      window.setTimeout(async () => {
          let coordinates = await Geolocation.getCurrentPosition();
@@ -92,6 +93,7 @@ export default {
             map: this.map
           });
           mark.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+        
     }, 1000);
       // if(coordinates){
         
@@ -193,10 +195,34 @@ export default {
 </script>
 
 <template>
-  <div class="map" id="map"></div>
+<div class="box">
+  <div id="map"></div>
+  <img src="../assets/pin.png" alt="" style="width:32px;position:absolute;left:0;right:0;top:0;bottom:0;margin:auto">
+</div>
+  
 </template>
 <style scoped>
+.box{
+  width: 100%;
+  height: 91vh;
+  position: relative;
+}
 #map {
-  height: 100%;
+  width: 100%;
+  height: 91vh;
+  /* position: relative; */
+}
+
+#titiktengah{
+  /* width: 10px;
+  height: 10px; */
+  /* background-color:yellow ;
+  border-radius: 100%; */
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
 </style>

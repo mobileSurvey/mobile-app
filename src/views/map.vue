@@ -1,11 +1,5 @@
 <template>
-  <ion-page>
-    <ion-content :fullscreen="true">
-      
-    
-      <!-- <ExploreContainer name="Tab 1 page" /> -->
-     <Gmap
- 
+   <Gmap
     :center="{ lat: -8.333363311313447, lng: 110.50523502681817 }"
     :zoom="8"
     :clickActive="true"
@@ -37,26 +31,15 @@
       },
     ]"
   />
-     
-    </ion-content>
-  </ion-page>
 </template>
 
-<script >
-import { IonPage, IonContent } from '@ionic/vue';
-// import ExploreContainer from '../components/ExploreContainer.vue';
-
+<script>
 import Gmap from '../components/Gmap.vue';
-
-export default  {
-  name: 'Tab1',
-  components: { IonContent, IonPage, Gmap },
-  data(){
-    return{
-       srcc : '../assets/Fauzan.jpg'
-    }
-   
-  },
-  
+export default {
+ components: { Gmap },
 }
 </script>
+
+<style>
+
+</style>
