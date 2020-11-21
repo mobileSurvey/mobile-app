@@ -16,6 +16,18 @@
           <ion-icon :icon="square" />
           <ion-label>Tab 3</ion-label>
         </ion-tab-button>
+         <ion-tab-button tab="tab4" href="/tabs/tab4">
+          <ion-icon :icon="square" />
+          <ion-label>Tab 4</ion-label>
+        </ion-tab-button>
+         <ion-tab-button tab="tab5" href="/tabs/tab5">
+          <ion-icon :icon="square" />
+          <ion-label>Tab 5</ion-label>
+        </ion-tab-button>
+         <ion-tab-button tab="tab6" href="/tabs/tab6">
+          <ion-icon :icon="square" />
+          <ion-label>Tab 6</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
