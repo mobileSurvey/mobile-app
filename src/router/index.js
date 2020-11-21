@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import Tabs from '../views/Tabs.vue'
-
+import Form from '../views/Form.vue';
 const routes = [
   {
     path: '/',
@@ -18,6 +18,14 @@ const routes = [
     meta: {
       requiresAuth: false
   }
+  
+  },
+  {
+    path: '/form/:id',
+    // redirect: '/tabs/tab1'
+    name: 'form',
+    component: Form,
+  
   
   },
   {
@@ -82,8 +90,8 @@ router.beforeEach(async (to, from, next) => {
   // console.log(user)
   if(to.matched.some(record => record.meta.requiresAuth)) {
   
-    console.log(ret)
-      if (!user.token ) {
+    // console.log(ret)
+      if (!user.accesstoken ) {
           next({
               path: '/',
               query: { tujuan: to.fullPath }

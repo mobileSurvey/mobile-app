@@ -33,7 +33,8 @@ import './theme/variables.css';
 const app = createApp(App)
   .use(IonicVue)
   .use(router);
-  
+
+  app.config.globalProperties.$ipBackend = 'http://mapgeo.id:8870'
   // app.use(googleMap, googleMapOption);
 router.isReady().then(() => {
   app.mount('#app');

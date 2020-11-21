@@ -39,32 +39,32 @@ export default {
 
   },
   watch: {
-    center: async function (val) {
-      if (this.map == null) {
-      // //    this.map = new google.maps.Map(document.getElementById("map"), {
-      // //   center: this.center,
-      // //   zoom: this.zoom,
-      // //   mapTypeId: this.mapType,
-      // // }
-      // );
-      } else {
-        this.map.setCenter(new google.maps.LatLng(val.lat, val.lng));
-          let coordinates = await Geolocation.getCurrentPosition();
-    console.log('Current', coordinates.coords.latitude, coordinates.coords.longitude);
-       this.map.panTo(new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude));
-        this.map.setZoom(17);
+    // center: async function (val) {
+    //   if (this.map == null) {
+    //   // //    this.map = new google.maps.Map(document.getElementById("map"), {
+    //   // //   center: this.center,
+    //   // //   zoom: this.zoom,
+    //   // //   mapTypeId: this.mapType,
+    //   // // }
+    //   // );
+    //   } else {
+    // //     this.map.setCenter(new google.maps.LatLng(val.lat, val.lng));
+    // //       let coordinates = await Geolocation.getCurrentPosition();
+    // // console.log('Current', coordinates.coords.latitude, coordinates.coords.longitude);
+    // //    this.map.panTo(new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude));
+    // //     this.map.setZoom(17);
        
-      }
-    },
+    //   }
+    // },
   },
   data() {
     return {
       map: null,
-      loaded: false
+ 
     };
   },
   methods:{
-    inisialisasiMap(){
+   async inisialisasiMap(){
     //       const googleMapScript = document.createElement("SCRIPT");
     // googleMapScript.setAttribute(
     //   "src",
@@ -75,57 +75,76 @@ export default {
     // document.head.appendChild(googleMapScript);
          // let map = this.map;
     // window.addEventListener("load", async () => {
+
       this.map = new google.maps.Map(document.getElementById("map"), {
         center: this.center,
         zoom: this.zoom,
+        streetViewControl: false,
+        zoomControl: false,
+        fullscreenControl: false,
         mapTypeId: this.mapType,
       });
-  this.loaded = true;
+  this.map.addListener("center_changed", () => {
+   
+    this.$emit('ganti-center', {lat: this.map.getCenter().lat(), lng: this.map.getCenter().lng()})
+   
+    console.log(this.map.getCenter().lat())
+
+  });
 // posisi sekarang
-     window.setTimeout(async () => {
-         let coordinates = await Geolocation.getCurrentPosition();
+//      window.setTimeout(async () => {
+//  this.map.setZoom(10);
+//      }, 300);
+//  console.log(this.center, 'ini center')
+  let coordinates = await Geolocation.getCurrentPosition();
+ 
+if(this.center.lng===0){
     console.log('Current', coordinates.coords.latitude, coordinates.coords.longitude);
        this.map.panTo(new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude));
-        this.map.setZoom(17);
+        this.map.setZoom(19);
       let mark=   new google.maps.Marker({
             position: new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude),
              animation: google.maps.Animation.DROP,
             map: this.map
           });
           mark.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-        
-    }, 1000);
+}else{
+        this.map.panTo(new google.maps.LatLng(this.center.lat,this.center.lng));
+        this.map.setZoom(19);
+              let mark=   new google.maps.Marker({
+            position: new google.maps.LatLng(this.center.lat, this.center.lng),
+             animation: google.maps.Animation.DROP,
+            map: this.map
+          });
+          mark.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+}
+
       // if(coordinates){
         
       //  google.maps.event.trigger(this.map, 'resize');
       // }
-  this.map.addListener("center_changed", () => {
-    // 3 seconds after the center of the map has changed, pan back to the
-    // marker.
-    
-   
-    console.log(this.map.getCenter().lat())
-
-  });
+ 
     //   if(this.tileUrl && this.layerId){
 
-                 var TILE_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-        var layer = new google.maps.ImageMapType({
-                name: 'ESRI',
-                getTileUrl: function (coord, zoom) {
-                    var url = TILE_URL
-                        .replace('{x}', coord.x)
-                        .replace('{y}', coord.y)
-                        .replace('{z}', zoom);
-                    return url;
-                },
-                tileSize: new google.maps.Size(256, 256),
-                minZoom: 1,
-                maxZoom: 20
-            })
+//esriiiiii
+        //          var TILE_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+        // var layer = new google.maps.ImageMapType({
+        //         name: 'ESRI',
+        //         getTileUrl: function (coord, zoom) {
+        //             var url = TILE_URL
+        //                 .replace('{x}', coord.x)
+        //                 .replace('{y}', coord.y)
+        //                 .replace('{z}', zoom);
+        //             return url;
+        //         },
+        //         tileSize: new google.maps.Size(256, 256),
+        //         minZoom: 1,
+        //         maxZoom: 20
+        //     })
 
-            this.map.mapTypes.set('ESRI', layer);
-            this.map.setMapTypeId('ESRI');        
+        //     this.map.mapTypes.set('ESRI', layer);
+        //     this.map.setMapTypeId('ESRI');   
+            //end esriiiiii     
     //   }
 
  
@@ -197,19 +216,20 @@ export default {
 <template>
 <div class="box">
   <div id="map"></div>
-  <img src="../assets/pin.png" alt="" style="width:32px;position:absolute;left:0;right:0;top:0;bottom:0;margin:auto">
+  <img src="../assets/pin.png" alt=""  style="width:32px;position:absolute;left:0;right:0;top:0;bottom:30px;margin:auto">
 </div>
   
 </template>
 <style scoped>
 .box{
   width: 100%;
-  height: 91vh;
+  height:200px;
   position: relative;
 }
 #map {
-  width: 100%;
-  height: 91vh;
+  /* width: 100%; */
+  width:100%;height:200px
+  /* height: 91vh; */
   /* position: relative; */
 }
 

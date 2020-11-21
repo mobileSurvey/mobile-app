@@ -2,87 +2,320 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Usulan</ion-title>
+        <ion-title>Usulan Belum Terupload</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <div class="box">
-      <div style="width:100%;height:200px;background-color:red"></div>
+       <ion-content :fullscreen="true">
+       <div v-if="loaded">
+    
+
+    
+      <ion-list v-if="datane.length>0">
+           
+        <ion-item  v-for="(item, i) in datane" :key="item.id">
       
-      <ion-item>
-        <ion-label position="floating">Kegiatan</ion-label>
-        <ion-input type="text"></ion-input>
-      </ion-item>
+          <ion-avatar slot="start">
+            <img src="../assets/list.png">
+          </ion-avatar>
+          <ion-label>
+            <h3><strong>{{item.kegiatanPrioritas}}</strong></h3>
+            <h3>{{item.alamat}}</h3>
+            <p>Kelurahan: {{item.kel}}</p>
+            <p>Anggaran: {{item.alokasiDanaKelurahan}}</p>
+          </ion-label>
+         <ion-icon :icon="cloudCircleOutline" style="color:#4287f5" @click="upload(item, i)"></ion-icon>
+         <ion-icon :icon="trashOutline" style="color:red" @click="hapus(i)"></ion-icon>
 
-      <ion-item>
-        <ion-label position="floating">Lokasi</ion-label>
-        <ion-input type="text"></ion-input>
-      </ion-item>
-
-       <ion-item>
-          <ion-label>Kecamatan</ion-label>
-          <ion-select value="kec">
-            <ion-select-option value="">Kec A</ion-select-option>
-            <ion-select-option value="">Kec B</ion-select-option>
-          </ion-select>
         </ion-item>
+      </ion-list>
+       <ExploreContainer name="Tidak Ada Data" v-else />
+       </div>
 
-       <ion-item>
-          <ion-label>Kelurahan</ion-label>
-          <ion-select value="kel">
-            <ion-select-option value="">Kel A</ion-select-option>
-            <ion-select-option value="">Kel B</ion-select-option>
-          </ion-select>
-        </ion-item>
+       <div v-else>
 
+
+    <ion-list>
+     
       <ion-item>
-        <ion-label position="floating">Volume</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
       </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">APBD</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
       </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Alokasi Dana Kelurahan (DAUT/APBN)</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
       </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Alokasi Dana Kelurahan (APBD)</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
       </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Pelaksana</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
       </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Kesesuaian Dengan PERWALI</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
       </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Keterangan</ion-label>
-        <ion-textarea></ion-textarea>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
       </ion-item>
-       <ion-button expand="block" style="margin-top:30px">Simpan</ion-button>  
-      
-      </div>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+        <ion-item>
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+     
+  
+    </ion-list>
+  </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSkeletonText, IonIcon, IonAvatar, IonItem, IonLabel, IonList,loadingController, alertController } from '@ionic/vue';
+import { Plugins } from '@capacitor/core';
+ import { cloudCircleOutline, trashOutline } from "ionicons/icons";
+ import axios from 'axios';
+ import { useRouter } from 'vue-router';
+import ExploreContainer from '@/components/ExploreContainer.vue';
+const { Network, Storage } = Plugins;
 
 
 export default  {
   name: 'Tab3',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonSkeletonText,IonIcon,IonAvatar, IonItem, IonLabel,  IonList, ExploreContainer  },
+    data(){
+    return {
+      datane: [],
+      loaded: false
+    }
+  },
+  setup(){
+     const router = useRouter();
+    return {cloudCircleOutline, trashOutline, router}
+  },
+  async created(){
+    let vm = this
+        let ret = await Storage.get({ key: 'datane' });
+                let datanya = JSON.parse(ret.value);
+         
+                if(Array.isArray(datanya)){
+                    vm.datane=datanya;   
+                       
+                }
+                vm.loaded = true
+  },
+  methods:{
+      async upload(item, i){
+          let status = await Network.getStatus();
+          console.log(status)
+      let loading = await loadingController
+        .create({
+          cssClass: 'my-custom-class',
+          message: 'Mohon Tunggu...',
+        });
+
+      await loading.present();
+          let vm = this;
+          if(status.connected){
+               axios.post(vm.$ipBackend+'/kegiatan/update/'+item.id, item)
+              .then(async function (response) {
+                console.log(response)
+                   vm.datane.splice(i, 1);
+               
+                await Storage.set({
+                    key: 'datane',
+                    value: JSON.stringify(vm.datane)
+                });
+                  loading.dismiss()
+                vm.router.push('/tabs/tab3')
+              })
+              .catch(function (error) {
+                   console.log(error)
+                      loading.dismiss()
+                       vm.router.push('/tabs/tab3')
+              });
+          }else{
+            
+                 loading.dismiss()
+
+      const alert = await alertController
+        .create({
+          header: 'Perhatian',
+        //   subHeader: 'Perhatian',
+          message: 'Internet tidak ditemukan',
+          buttons: [ {
+              text: 'Ya',
+              handler: () => {
+                 vm.router.push('/tabs/tab3')
+              },
+            },],
+        });
+      return alert.present();
+
+
+          }
+       
+      },
+      async hapus(id){
+              let vm = this;
+        vm.datane.splice(id, 1);
+               
+                await Storage.set({
+                    key: 'datane',
+                    value: JSON.stringify(vm.datane)
+                });
+      }
+  }
 }
 </script>
 

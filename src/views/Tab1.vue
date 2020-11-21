@@ -1,62 +1,80 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      
-    
-      <!-- <ExploreContainer name="Tab 1 page" /> -->
-     <Gmap
+    <ion-grid>
+      <ion-row>
+      <ion-col size="3" >
+           HALO
+     {{dataUser.username}}
+      </ion-col>
+      <ion-col size="3" offset="5">
+        <ion-button color="danger" @click="logout">Logout</ion-button>
+      </ion-col>
+    </ion-row>
+
  
-    :center="{ lat: -8.333363311313447, lng: 110.50523502681817 }"
-    :zoom="8"
-    :clickActive="true"
-    :getLatLng="true"
-    :mapType="'hybrid'"
-    :moveActive="false"
-    :polylines="{
-      strokeColor: '#FF0000',
-      coords: [
-        { lat: 37.772, lng: -122.214 },
-        { lat: 21.291, lng: -157.821 },
-        { lat: -18.142, lng: 178.431 },
-        { lat: -27.467, lng: 153.027 },
-      ],
-    }"
-    :markers="[
-      {
-        lat: 38.423733,
-        lng: 27.142826,
-        draggable: true,
-        title: 'title 1',
-        infoWindow: '<h1>this is my info</h1>',
-      },
-      {
-        lat: 41.015137,
-        lng: 28.97953,
-        draggable: true,
-        title: 'title 2',
-      },
-    ]"
-  />
+  </ion-grid>
      
     </ion-content>
   </ion-page>
 </template>
 
 <script >
-import { IonPage, IonContent } from '@ionic/vue';
+import { IonPage, IonContent, IonCol, IonGrid, IonRow, IonButton, alertController  } from '@ionic/vue';
 // import ExploreContainer from '../components/ExploreContainer.vue';
+import { Plugins } from '@capacitor/core';
 
-import Gmap from '../components/Gmap.vue';
+const { Storage } = Plugins;
 
 export default  {
   name: 'Tab1',
-  components: { IonContent, IonPage, Gmap },
-  data(){
+  components: { IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
+data(){
+     
+
     return{
-       srcc : '../assets/Fauzan.jpg'
+       srcc : '../assets/Fauzan.jpg',
+       dataUser: {}
     }
    
   },
+  async created(){
+    const ret = await Storage.get({ key: 'token' });
+    this.dataUser = JSON.parse(ret.value);
+  },
+  methods:{
+   async logout(){
+      let vm = this;
+       const alert = await alertController
+        .create({
+          cssClass: 'my-custom-class',
+          header: 'Perhatian!',
+          message: 'Apakah yakin akan logout?',
+          buttons: [
+            {
+              text: 'Batal',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: blah => {
+                console.log('Confirm Cancel:', blah)
+              },
+            },
+            {
+              text: 'Ya',
+              handler:async () => {
+                  await Storage.set({
+                    key: 'token',
+                    value: JSON.stringify({})
+                });
+                vm.$router.push('/')
+              },
+
+            },
+          ],
+        });
+      return alert.present();
+    }
+  }
   
 }
 </script>

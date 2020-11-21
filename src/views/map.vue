@@ -34,6 +34,7 @@
 </template>
 
 <script>
+
 import Gmap from '../components/Gmap.vue';
 export default {
  components: { Gmap },
