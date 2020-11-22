@@ -102,12 +102,12 @@ if(this.center.lng===0){
     console.log('Current', coordinates.coords.latitude, coordinates.coords.longitude);
        this.map.panTo(new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude));
         this.map.setZoom(19);
-      let mark=   new google.maps.Marker({
-            position: new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude),
-             animation: google.maps.Animation.DROP,
-            map: this.map
-          });
-          mark.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+    //   let mark=   new google.maps.Marker({
+    //         position: new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude),
+    //          animation: google.maps.Animation.DROP,
+    //         map: this.map
+    //       });
+    //       mark.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
 }else{
         this.map.panTo(new google.maps.LatLng(this.center.lat,this.center.lng));
         this.map.setZoom(19);

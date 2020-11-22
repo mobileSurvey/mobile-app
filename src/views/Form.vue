@@ -93,6 +93,29 @@
         <ion-label position="floating">Keterangan</ion-label>
         <ion-textarea v-model="datane.keterangan"></ion-textarea>
       </ion-item>
+       <ion-item>
+  
+        <ion-button expand="block" style="margin-top:30px" @click="ambilGambar('foto1')">Foto 1</ion-button>  
+           <img v-if="datane.foto1" :src="'data:image/jpeg;base64,'+datane.foto1" style="width:150px" @click="lihatFoto('data:image/jpeg;base64,'+datane.foto1)" />
+       
+      </ion-item>
+       <ion-item>
+   
+             <ion-button expand="block" style="margin-top:30px" @click="ambilGambar('foto2')">Foto 2</ion-button>  
+           <img v-if="datane.foto2" :src="'data:image/jpeg;base64,'+datane.foto2" style="width:150px"  @click="lihatFoto('data:image/jpeg;base64,'+datane.foto2)" />
+     
+         
+      </ion-item>
+       <ion-item>
+     
+              <ion-button expand="block" style="margin-top:30px" @click="ambilGambar('foto3')">Foto 3</ion-button>  
+           <img v-if="datane.foto3" :src="'data:image/jpeg;base64,'+datane.foto3" style="width:150px"  @click="lihatFoto('data:image/jpeg;base64,'+datane.foto3)"  />
+     
+  
+      </ion-item>
+
+   
+     
        <ion-button expand="block" style="margin-top:30px" @click="simpan">Simpan</ion-button>  
       
       </div>
@@ -121,9 +144,9 @@ IonContent,
 import Gmap from '../components/Gmap.vue';
 import axios from 'axios';
  import { useRouter } from 'vue-router';
-import { Plugins } from '@capacitor/core';
-
-const { Network, Storage } = Plugins;
+import { Plugins, CameraResultType ,CameraSource } from '@capacitor/core';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
+const { Network, Storage, Camera } = Plugins;
 
 
 export default  {
@@ -161,6 +184,7 @@ export default  {
               .then(async function (response) {
                 
                  vm.datane = response.data.respon[0]
+                //  console.log(vm.datane.foto1)
                    vm.datane.kesesuaian =   vm.datane.kesesuaian.toString()
                  console.log(vm.datane)
                  if(response.data.respon[0].SHAPE){
@@ -266,8 +290,32 @@ export default  {
         ganticenter(v){
         this.datane.xe = v.lng;
          this.datane.ye = v.lat;
-      }
+      },
+  
+     async ambilGambar(jen){
+         const cameraPhoto = await Camera.getPhoto({
+      resultType: CameraResultType.Base64 ,
+      source: CameraSource.Prompt,
+      promptLabelHeader: 'Pilih Aksi',
+      promptLabelPhoto: 'Ambil Dari Gallery',
+      promptLabelPicture: 'Ambil Dari Kamera',
+      quality: 50,
+      saveToGallery: true,
+      allowEditing: false
+    });
+    if(jen=='foto1'){
+      this.datane.foto1 = cameraPhoto.base64String
+    
+    }else if(jen=='foto2'){
+      this.datane.foto2 = cameraPhoto.base64String
+    }else if(jen=='foto3'){
+      this.datane.foto3 = cameraPhoto.base64String
+    }
 
+      },
+      lihatFoto(data){
+        PhotoViewer.show(data,'Foto Lapangan', {share: true});
+      }
   }
 }
 </script>
