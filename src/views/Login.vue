@@ -38,7 +38,7 @@
 import { IonPage, IonContent, IonButton, IonSpinner  } from '@ionic/vue';
 import axios from 'axios';
 import { Plugins } from '@capacitor/core';
- import { useRouter } from 'vue-router';
+
 
 
 const { Storage } = Plugins;
@@ -58,11 +58,7 @@ export default  {
           loading : false
       }
   },
-    setup() {
-      const router = useRouter();
-     
-      return { router };
-    },
+  
   methods:{
       loginn(){
           let vm = this;
@@ -81,8 +77,8 @@ export default  {
                     value: JSON.stringify(response.data[0])
                 });
                 vm.pesan = '';
-              
-                vm.router.push('/tabs/tab1')
+               vm.$router.push('/tabs/tab1')
+             
                 //   (route.query.tujuan)?
                 //     route.push({ path: this.$route.query.tujuan}): 
                 //     route.push({ path: '/'})

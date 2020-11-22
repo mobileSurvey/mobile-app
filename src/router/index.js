@@ -7,8 +7,8 @@ const routes = [
     // redirect: '/tabs/tab1'
     component: () => import('@/views/Login.vue'),
     meta: {
-      requiresAuth: false
-  }
+      guest: true
+    }
   
   },
   {
@@ -101,13 +101,13 @@ router.beforeEach(async (to, from, next) => {
           next()
       }
   } else if(to.matched.some(record => record.meta.guest)) {
-    // console.log(localStorage.getItem('token'))
-      // if(!localStorage.getItem('token') || localStorage.getItem('token')  == "undefined" || localStorage.getItem('token') == '' ){
-      //     next()
-      // }
-      // else{
-      //     next({ name: 'dashboard'})
-      // }
+   
+      if(!user.accesstoken){
+          next()
+      }
+      else{
+          next({ path: '/tabs/tab1'})
+      }
   }else {
       next()
   }
