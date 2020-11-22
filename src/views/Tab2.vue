@@ -3,10 +3,10 @@
     <ion-header>
       <ion-toolbar>
          
-        <ion-title>Data Usulan Kel {{user.username}}</ion-title>
+        <ion-title>Data Usulan Kel {{user.kelurahan}}</ion-title>
           <ion-item>
           <ion-label>Tahun</ion-label>
-          <ion-select  v-model="tahun">
+          <ion-select  :value="tahun" @ionChange="gantiTahun($event.target)">
             <ion-select-option v-for="x in 50" :key="x">{{x+2019}}</ion-select-option>
       
           </ion-select>
@@ -234,20 +234,21 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,   IonSkeletonText  } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,   IonSkeletonText, IonSelect  } from '@ionic/vue';
 import axios from 'axios';
  import { useRouter } from 'vue-router';
 import { Plugins } from '@capacitor/core';
 
 const { Storage } = Plugins;
 
+
 export default  {
   name: 'Tab2',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,   IonSkeletonText  },
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,   IonSkeletonText, IonSelect  },
   data(){
     return {
       datane: [],
-      tahun: 0,
+      tahun: '2021',
       user: {}
     }
   },
@@ -257,16 +258,20 @@ export default  {
       return { router };
     },
   async created(){
+   
     let vm = this;
-      let ret = await Storage.get({ key: 'token' });
+  var d = new Date();
+  var tahunnya = d.getFullYear()+1;
+  vm.tahun = tahunnya.toString();
+  vm.loadData()
+      
+  },
+  methods:{
+   async loadData(){
+         let vm = this;
+       let ret = await Storage.get({ key: 'token' });
                 vm.user = JSON.parse(ret.value);
-         
-      //           if(Array.isArray(datanya)){
-      //               vm.datane= vm.datane.concat(datanya)
-                    
-      //           }
-
-        axios.post(vm.$ipBackend+'/kegiatan/listall')
+        axios.post(vm.$ipBackend+'/kegiatan/listforapp/'+vm.tahun+'/'+vm.user.kelurahan)
               .then(async function (response) {
                 console.log(response.data.respon)
                  if(Array.isArray(response.data.respon)){
@@ -277,12 +282,10 @@ export default  {
               .catch(function (error) {
                    console.log(error)
               });
-  },
-  methods:{
-    
+    },
     refresh(e){
        let vm = this;
-        axios.post(vm.$ipBackend+'/kegiatan/listall')
+        axios.post(vm.$ipBackend+'/kegiatan/listforapp/'+vm.tahun+'/'+vm.user.kelurahan)
               .then(async function (response) {
                 console.log(response)
                  vm.datane = response.data.respon
@@ -292,6 +295,10 @@ export default  {
                    console.log(error)
                      e.target.complete();
               });
+    },
+    gantiTahun(e){
+      this.tahun = e.value;
+      this.loadData();
     }
   }
 }

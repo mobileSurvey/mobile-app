@@ -24,7 +24,11 @@ import { IonPage, IonContent, IonCol, IonGrid, IonRow, IonButton, alertControlle
 // import ExploreContainer from '../components/ExploreContainer.vue';
 import { Plugins } from '@capacitor/core';
 
-const { Storage } = Plugins;
+const { Storage, StatusBar } = Plugins;
+
+
+// set status bar to white
+
 
 export default  {
   name: 'Tab1',
@@ -39,6 +43,7 @@ data(){
    
   },
   async created(){
+    StatusBar.setBackgroundColor({color:'#1200d9'});
     const ret = await Storage.get({ key: 'token' });
     this.dataUser = JSON.parse(ret.value);
   },

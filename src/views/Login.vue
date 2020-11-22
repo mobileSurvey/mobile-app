@@ -42,6 +42,10 @@ import { Plugins } from '@capacitor/core';
 
 
 const { Storage } = Plugins;
+
+
+
+
 export default  {
   name: 'Login',
   components: { IonPage, IonContent, IonButton, IonSpinner  },
@@ -94,6 +98,9 @@ export default  {
       }
   },
   async created(){
+
+
+
      const ret = await Storage.get({ key: 'token' });
   const user = JSON.parse(ret.value);
     if(user.accesstoken){
