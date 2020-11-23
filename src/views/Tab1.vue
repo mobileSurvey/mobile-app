@@ -1,26 +1,33 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-    <ion-grid>
-      <ion-row>
-      <ion-col size="3" >
-           HALO
-     {{dataUser.username}}
-      </ion-col>
-      <ion-col size="3" offset="5">
-        <ion-button color="danger" @click="logout">Logout</ion-button>
-      </ion-col>
-    </ion-row>
+      <div class="bg-box">
+        <ion-grid style="position:absolute;left:0;right:0;bottom:-50px;">
+          <ion-row>
+            <ion-col style="background-color:red">
+              <ion-row>
+                <ion-col>
+              <div style="width:100%;height:80px;background-color:pink"></div>
+            </ion-col>
 
- 
-  </ion-grid>
+            <ion-col>
+              <div style="width:100%;height:80px;background-color:pink"></div>
+            </ion-col>
+              </ion-row>
+            </ion-col>
+
+            
+          </ion-row>
+        </ion-grid>
+      </div>
+      
      
     </ion-content>
   </ion-page>
 </template>
 
 <script >
-import { IonPage, IonContent, IonCol, IonGrid, IonRow, IonButton, alertController  } from '@ionic/vue';
+import { IonPage, IonContent, IonCol, IonGrid, IonRow, alertController  } from '@ionic/vue';
 // import ExploreContainer from '../components/ExploreContainer.vue';
 import { Plugins } from '@capacitor/core';
 
@@ -32,7 +39,7 @@ const { Storage, StatusBar } = Plugins;
 
 export default  {
   name: 'Tab1',
-  components: { IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
+  components: { IonContent, IonPage, IonCol, IonGrid, IonRow, },
 data(){
      
 
@@ -83,3 +90,12 @@ data(){
   
 }
 </script>
+
+<style scoped>
+.bg-box{
+  background-color: yellow;
+  height: 260px;
+  position: relative;
+}
+
+</style>
