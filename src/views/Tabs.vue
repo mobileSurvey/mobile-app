@@ -13,13 +13,10 @@
         </ion-tab-button>
         
         <ion-tab-button tab="tab3" href="/tabs/tab3">
-          <ion-icon :icon="listCircle" />
+          <ion-icon :icon="closeCircleOutline" />
           <ion-label>Usulan Tertunda</ion-label>
         </ion-tab-button>
-         <ion-tab-button tab="tab4" href="/tabs/tab4">
-          <ion-icon :icon="statsChart" />
-          <ion-label>Tab 4</ion-label>
-        </ion-tab-button>
+    
       
       </ion-tab-bar>
     </ion-tabs>
@@ -28,7 +25,7 @@
 
 <script lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage } from '@ionic/vue';
-import { listCircle, statsChart, homeSharp } from 'ionicons/icons';
+import { listCircle,closeCircleOutline, statsChart, homeSharp } from 'ionicons/icons';
 
 export default {
   name: 'Tabs',
@@ -37,7 +34,7 @@ export default {
     return {
       listCircle, 
       statsChart, 
-   
+   closeCircleOutline,
       homeSharp
     }
   }

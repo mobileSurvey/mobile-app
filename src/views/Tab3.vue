@@ -6,6 +6,11 @@
       </ion-toolbar>
     </ion-header>
        <ion-content :fullscreen="true">
+           <ion-refresher slot="fixed" @ionRefresh="refresh($event)">
+      <ion-refresher-content>
+  
+      </ion-refresher-content>
+    </ion-refresher>
        <div v-if="loaded">
     
 
@@ -221,7 +226,7 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSkeletonText, IonIcon, IonAvatar, IonItem, IonLabel, IonList,loadingController, alertController } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonRefresher, IonRefresherContent, IonSkeletonText, IonIcon, IonAvatar, IonItem, IonLabel, IonList,loadingController, alertController } from '@ionic/vue';
 import { Plugins } from '@capacitor/core';
  import { cloudCircleOutline, trashOutline } from "ionicons/icons";
  import axios from 'axios';
@@ -232,7 +237,7 @@ const { Network, Storage } = Plugins;
 
 export default  {
   name: 'Tab3',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonSkeletonText,IonIcon,IonAvatar, IonItem, IonLabel,  IonList, ExploreContainer  },
+  components: { IonHeader, IonToolbar, IonTitle,IonRefresher, IonRefresherContent, IonContent, IonPage, IonSkeletonText,IonIcon,IonAvatar, IonItem, IonLabel,  IonList, ExploreContainer  },
     data(){
     return {
       datane: [],
@@ -244,7 +249,17 @@ export default  {
     return {cloudCircleOutline, trashOutline, router}
   },
   async created(){
-    let vm = this
+    this.loadData();
+  },
+  methods:{
+     async refresh(e){
+      this.loadData();
+        e.target.complete();
+    },
+    async loadData(){
+     
+        let vm = this
+          vm.loaded = false
         let ret = await Storage.get({ key: 'datane' });
                 let datanya = JSON.parse(ret.value);
          
@@ -253,8 +268,7 @@ export default  {
                        
                 }
                 vm.loaded = true
-  },
-  methods:{
+    },
       async upload(item, i){
           let status = await Network.getStatus();
           console.log(status)

@@ -83,6 +83,7 @@ export default {
         zoomControl: false,
         fullscreenControl: false,
         mapTypeId: this.mapType,
+        mapTypeControl: false
       });
   this.map.addListener("center_changed", () => {
    
@@ -223,12 +224,12 @@ if(this.center.lng===0){
 <style scoped>
 .box{
   width: 100%;
-  height:200px;
+  height:300px;
   position: relative;
 }
 #map {
   /* width: 100%; */
-  width:100%;height:200px
+  width:100%;height:300px
   /* height: 91vh; */
   /* position: relative; */
 }

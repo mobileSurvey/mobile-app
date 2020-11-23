@@ -87,29 +87,40 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const ret = await Storage.get({ key: 'token' });
   const user = JSON.parse(ret.value);
-  // console.log(user)
+
   if(to.matched.some(record => record.meta.requiresAuth)) {
   
     // console.log(ret)
+    if(user){
       if (!user.accesstoken ) {
-          next({
-              path: '/',
-              query: { tujuan: to.fullPath }
-          })
-      } else {
-        
-          next()
-      }
+        next({
+            path: '/',
+            query: { tujuan: to.fullPath }
+        })
+    } else {
+      
+        next()
+    }
+    }else{
+      next({
+        path: '/',
+        query: { tujuan: to.fullPath }
+    })
+    }
+     
   } else if(to.matched.some(record => record.meta.guest)) {
-   
-      if(!user.accesstoken){
-          next()
-      }
-      else{
-          next({ path: '/tabs/tab1'})
-      }
-  }else {
-      next()
-  }
+    if(user){
+          if(!user.accesstoken){
+              next()
+          }
+          else{
+              next({ path: '/tabs/tab1'})
+          }
+        }else {
+            next()
+        }
+      }else{
+        next()
+    }
 })
 export default router

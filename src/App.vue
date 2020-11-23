@@ -20,3 +20,16 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+/* @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300&display=swap');
+@font-face{
+  font-family: "Mukta";
+  src: local("Mukta"),
+  url(./assets/font/Mukta-Light.ttf)
+}
+
+body{
+  font-family: 'Mukta', sans-serif;
+  } */
+</style>

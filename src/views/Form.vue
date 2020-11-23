@@ -1,16 +1,12 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-          <ion-buttons slot="start">
-        <ion-back-button defaultHref="/tabs/tab2"></ion-back-button>
+ 
+    <ion-content :fullscreen="true" style="">
+     
+      <div style="width:100%;height:300px;background-color:;position:relative">
+        <ion-buttons slot="start" style="position:absolute;top:10px;left:10px;z-index:1000">
+        <ion-back-button defaultHref="/tabs/tab2" style="color:#fff;font-weight:bold" :text="'Kembali'"></ion-back-button>
          </ion-buttons>
-        <ion-title>Usulan</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
-  
-      <div style="width:100%;height:200px;background-color:red">
             <Gmap
     v-if="mapShow"
     :center="center"
@@ -41,7 +37,13 @@
         <ion-label position="floating">Lokasi</ion-label>
         <ion-input type="text" v-model="datane.lokasi"></ion-input>
       </ion-item>
-
+ <ion-item>
+          <ion-label>Jenis Pekerjaan</ion-label>
+          <ion-select  v-model="datane.jeniId" >
+            <ion-select-option v-for="item in jenis" :key="item.id" :value="item.id">{{item.jenis}}</ion-select-option>
+           
+          </ion-select>
+        </ion-item>
        <ion-item>
           <ion-label>Kecamatan</ion-label>
           <ion-select value="kec" v-model="datane.kec" @ionChange="gantiKec($event)">
@@ -116,7 +118,7 @@
 
    
      
-       <ion-button expand="block" style="margin-top:30px" @click="simpan">Simpan</ion-button>  
+       <ion-button expand="block" style="margin-top:30px" @click="simpan" v-if="datane.approval==0">Simpan</ion-button>  
       
       </div>
     </ion-content>
@@ -126,9 +128,7 @@
 
 <script lang="ts">
 import { IonPage, 
-IonHeader, 
-IonToolbar, 
-IonTitle, 
+ 
 IonContent,
  IonButton,
   IonItem, 
@@ -146,17 +146,18 @@ import axios from 'axios';
  import { useRouter } from 'vue-router';
 import { Plugins, CameraResultType ,CameraSource } from '@capacitor/core';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
-const { Network, Storage, Camera } = Plugins;
+const { Network, Storage, Camera, Toast  } = Plugins;
 
 
 export default  {
   name: 'Form',
-  components: {  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonTextarea, IonLabel, IonBackButton, IonSelectOption, IonInput, IonSelect, IonButtons, Gmap  },
+  components: {  IonPage,  IonContent, IonButton, IonItem, IonTextarea, IonLabel, IonBackButton, IonSelectOption, IonInput, IonSelect, IonButtons, Gmap  },
    data(){
     return {
       datane: {},
       kec:[],
       kel:[],
+      jenis:[],
       center : { lat: 0, lng: 0},
       mapShow: false
     }
@@ -180,9 +181,12 @@ export default  {
                vm.kec = kecamatan.data
          let kelurahan = await   axios.get(vm.$ipBackend+'/kegiatan/kel/0')
                vm.kel = kelurahan.data
+          let jenis = await   axios.get(vm.$ipBackend+'/jenis/listforapp')
+             vm.jenis = jenis.data.respon
+             console.log( vm.jenis)
         axios.post(vm.$ipBackend+'/kegiatan/list/'+this.$route.params.id)
               .then(async function (response) {
-                
+          
                  vm.datane = response.data.respon[0]
                 //  console.log(vm.datane.foto1)
                    vm.datane.kesesuaian =   vm.datane.kesesuaian.toString()
@@ -228,15 +232,25 @@ export default  {
 
       await loading.present();
           let vm = this;
+           let ret = await Storage.get({ key: 'token' });
+                let user = JSON.parse(ret.value);
           if(status.connected){
-               axios.post(vm.$ipBackend+'/kegiatan/update/'+this.$route.params.id, vm.datane)
+               axios.post(vm.$ipBackend+'/kegiatan/update/'+this.$route.params.id, vm.datane,{ headers:{
+                 accesstoken: user.accesstoken
+               }})
               .then(async function (response) {
                 console.log(response)
+                 await Toast.show({
+                        text: 'Berhasil'
+                      });
                   loading.dismiss()
                 vm.router.push('/tabs/tab2')
               })
-              .catch(function (error) {
+              .catch(async function (error) {
                    console.log(error)
+                   await Toast.show({
+                        text: error.message
+                      });
                       loading.dismiss()
                        vm.router.push('/tabs/tab2')
               });

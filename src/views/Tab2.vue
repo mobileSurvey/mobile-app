@@ -4,17 +4,18 @@
       <ion-toolbar>
          
         <ion-title>Data Usulan Kel {{user.kelurahan}}</ion-title>
-          <ion-item>
+          
+   
+      </ion-toolbar>
+    </ion-header>
+    <ion-content :fullscreen="true">
+      <ion-item>
           <ion-label>Tahun</ion-label>
           <ion-select  :value="tahun" @ionChange="gantiTahun($event.target)">
             <ion-select-option v-for="x in 50" :key="x">{{x+2019}}</ion-select-option>
       
           </ion-select>
         </ion-item>
-   
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="refresh($event)">
       <ion-refresher-content>
   
@@ -35,7 +36,7 @@
             <h3><strong>{{item.kegiatanPrioritas}}</strong></h3>
             <h3>{{item.alamat}}</h3>
             <p>Kelurahan: {{item.kel}}</p>
-            <p>Anggaran: {{item.alokasiDanaKelurahan}}</p>
+            <p>Anggaran: {{item.jumlahAnggaran}}</p>
           </ion-label>
          
         </ion-item>
@@ -234,7 +235,7 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,   IonSkeletonText, IonSelect  } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect  } from '@ionic/vue';
 import axios from 'axios';
  import { useRouter } from 'vue-router';
 import { Plugins } from '@capacitor/core';
@@ -244,7 +245,7 @@ const { Storage } = Plugins;
 
 export default  {
   name: 'Tab2',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,   IonSkeletonText, IonSelect  },
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect  },
   data(){
     return {
       datane: [],

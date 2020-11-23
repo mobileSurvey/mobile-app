@@ -1,35 +1,42 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <div class="box">
-        <h2>LOGIN</h2>
-        <h3>MOBILE SURVEY</h3>
-        <span v-if="pesan">{{pesan}}</span>
-        <!-- <ion-item>
-          <ion-label position="floating">Kegiatan</ion-label>
-          <ion-input type="text" v-model="username"></ion-input>
-        </ion-item> -->
-        <!-- <ion-item>
-          <ion-label position="floating">Kegiatan</ion-label>
-          <ion-input type="text" v-model="username"></ion-input>
-        </ion-item> -->
-        <center>
-           <input type="text" v-model="username" style="width:100%;margin-top:30px"/>
-        <input type="password" v-model="password" style="width:100%;margin-top:15px"/>
-        </center>
-       
-        <ion-button expand="block" @click="loginn()" style="margin-top:15px">
-           <ion-spinner name="crescent" v-if="loading"></ion-spinner>
-          
-          <span v-else>Login</span>
-          </ion-button>
+    <ion-content fullscreen>
+      <div class="bg">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <div class="box">
+                <h2 style="margin-top:0;margin-bottom:0"><strong>LOGIN</strong></h2>
+                <h3 style="margin-top:0;margin-bottom:0"><strong>MOBILE SURVEY</strong></h3>
+                <h3 style="margin-top:0;margin-bottom:0"><strong>KOTA SALATIGA</strong></h3>
+                <ion-list lines="full" class="ion-no-margin">
+                  <center>
+                    <span v-if="pesan" class="pesannya">{{pesan}}</span>
+                  </center>
+                  
+                  <ion-item >
+                    <ion-label position="floating">Username</ion-label>
+                    <ion-input type="text" :value="username"  @IonInput="username=$event.target.value" style="padding:0;margin:0"></ion-input>
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-label position="floating">Password</ion-label>
+                    <ion-input type="password" :value="password" @IonInput="password=$event.target.value"></ion-input>
+                  </ion-item>
+
+                  <ion-button expand="block" @click="loginn()" style="margin-top:15px">
+                  <ion-spinner name="crescent" v-if="loading"></ion-spinner>
+                  
+                  <span v-else>Login</span>
+                  </ion-button>
+                </ion-list>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
       
-        <!-- <input type="text" v-model="username"/> -->
-         <!-- <input type="password" v-model="password"/> -->
-         
-           
-       
+      
     </ion-content>
   </ion-page>
 </template>
@@ -108,7 +115,10 @@ export default  {
 
 <style scoped>
 .box{
-  padding: 60px 15px;
+  padding: 30px 30px;
+  background-color: #fff;
+  box-shadow:0 7px 20px 0 rgba(0,0,0,.2);
+  border-radius: 10px;
 }
 
 .box h2{
@@ -117,5 +127,23 @@ export default  {
 
 .box h3{
   text-align: center;
+}
+
+:host{
+  --padding-start:0px;
+}
+
+.bg{
+  width: 100%;
+  height: 260px;
+  background-image: url(../assets/bg.png);
+  background-size: cover;
+  padding: 60px 15px;
+}
+
+span.pesannya{
+  color: red;
+  font-weight: bold;
+
 }
 </style>
