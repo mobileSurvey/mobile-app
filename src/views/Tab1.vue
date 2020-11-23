@@ -20,10 +20,10 @@
 </template>
 
 <script >
-import { IonPage, IonContent, IonCol, IonGrid, IonRow, IonButton, alertController, useBackButton  } from '@ionic/vue';
+import { IonPage, IonContent, IonCol, IonGrid, IonRow, IonButton, alertController  } from '@ionic/vue';
 // import ExploreContainer from '../components/ExploreContainer.vue';
 import { Plugins } from '@capacitor/core';
-import { AppMinimize } from '@ionic-native/app-minimize';
+// import { AppMinimize } from '@ionic-native/app-minimize';
 const { Storage, StatusBar  } = Plugins;
 
 
@@ -33,12 +33,12 @@ const { Storage, StatusBar  } = Plugins;
 export default  {
   name: 'Tab1',
   components: { IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
-  setup() {
+  // setup() {
     
-    useBackButton(-1, () => {
-     AppMinimize.minimize();
-    });
-  },
+  //   useBackButton(-1, () => {
+  //    AppMinimize.minimize();
+  //   });
+  // },
 data(){
      
 
