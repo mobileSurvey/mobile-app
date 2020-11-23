@@ -12,6 +12,7 @@
   "dependencies": {
     "@capacitor/android": "^2.4.2",
     "@capacitor/core": "2.4.2",
+    "@ionic-native/app-minimize": "^5.30.0",
     "@ionic-native/core": "^5.29.0",
     "@ionic-native/google-maps": "^5.5.0",
     "@ionic-native/photo-viewer": "^5.30.0",
@@ -20,6 +21,7 @@
     "@ionic/vue-router": "^5.4.0",
     "axios": "^0.21.0",
     "com-sarriaroman-photoviewer": "^1.2.5",
+    "cordova-plugin-appminimize": "^1.0.1",
     "cordova-plugin-statusbar": "^2.4.3",
     "core-js": "^3.6.5",
     "google-maps-api-loader": "^1.1.1",
