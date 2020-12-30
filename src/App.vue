@@ -11,7 +11,7 @@ import { defineComponent } from 'vue';
 import { Plugins } from '@capacitor/core';
 
 const {StatusBar } = Plugins;
-  StatusBar.setBackgroundColor({color:'#1200d9'});
+  StatusBar.setBackgroundColor({color:'#2fafd5'});
 export default defineComponent({
   name: 'App',
   components: {

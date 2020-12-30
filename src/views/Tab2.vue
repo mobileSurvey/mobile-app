@@ -30,15 +30,16 @@
         <ion-item @click="$router.push('/form/'+item.id)"  v-for="item in datane" :key="item.id">
       
           <ion-avatar slot="start">
-            <img src="../assets/list.png">
+            <!-- <img src="../assets/list.png"> -->
+             <ion-icon :icon="hammerSharp"  style="color: #2fafd5; font-size: 45px;" />
           </ion-avatar>
           <ion-label>
             <h3><strong>{{item.kegiatanPrioritas}}</strong></h3>
             <h3>{{item.alamat}}</h3>
             <p>Kelurahan: {{item.kel}}</p>
-            <p>Anggaran: {{item.jumlahAnggaran}}</p>
+            <p>Anggaran: {{formatPrice(item.jumlahAnggaran)}}</p>
           </ion-label>
-         
+         <ion-icon :icon="checkmarkCircleSharp" style="color:green;font-size: 30px;" v-if="item.approval"></ion-icon>
         </ion-item>
      
       </ion-list>
@@ -235,17 +236,17 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect  } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect, IonIcon  } from '@ionic/vue';
 import axios from 'axios';
  import { useRouter } from 'vue-router';
 import { Plugins } from '@capacitor/core';
-
+import { hammerSharp, checkmarkCircleSharp } from 'ionicons/icons';
 const { Storage } = Plugins;
 
 
 export default  {
   name: 'Tab2',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect  },
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect, IonIcon  },
   data(){
     return {
       datane: [],
@@ -256,7 +257,7 @@ export default  {
    setup() {
       const router = useRouter();
      
-      return { router };
+      return { router, hammerSharp,checkmarkCircleSharp };
     },
   async created(){
    
@@ -268,6 +269,10 @@ export default  {
       
   },
   methods:{
+      formatPrice(value) {
+        let val = (value/1).toFixed(0).replace('.', ',')
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    },
    async loadData(){
          let vm = this;
        let ret = await Storage.get({ key: 'token' });

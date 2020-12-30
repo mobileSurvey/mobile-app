@@ -20,16 +20,17 @@
         <ion-item  v-for="(item, i) in datane" :key="item.id">
       
           <ion-avatar slot="start">
-            <img src="../assets/list.png">
+            <!-- <img src="../assets/list.png"> -->
+              <ion-icon :icon="cloudOfflineSharp"  style="color: #2fafd5; font-size: 45px;" />
           </ion-avatar>
           <ion-label>
             <h3><strong>{{item.kegiatanPrioritas}}</strong></h3>
             <h3>{{item.alamat}}</h3>
             <p>Kelurahan: {{item.kel}}</p>
-            <p>Anggaran: {{item.alokasiDanaKelurahan}}</p>
+            <p>Anggaran: {{formatPrice(item.jumlahAnggaran)}}</p>
           </ion-label>
-         <ion-icon :icon="cloudCircleOutline" style="color:#4287f5" @click="upload(item, i)"></ion-icon>
-         <ion-icon :icon="trashOutline" style="color:red" @click="hapus(i)"></ion-icon>
+         <ion-icon :icon="cloudCircleOutline" style="color:#4287f5;font-size: 30px;"  @click="upload(item, i)"></ion-icon>
+         <ion-icon :icon="trashOutline" style="color:red;font-size: 30px;" @click="hapus(i)"></ion-icon>
 
         </ion-item>
       </ion-list>
@@ -233,7 +234,7 @@ import { Plugins } from '@capacitor/core';
  import { useRouter } from 'vue-router';
 import ExploreContainer from '@/components/ExploreContainer.vue';
 const { Network, Storage } = Plugins;
-
+import { cloudOfflineSharp } from 'ionicons/icons';
 
 export default  {
   name: 'Tab3',
@@ -246,7 +247,7 @@ export default  {
   },
   setup(){
      const router = useRouter();
-    return {cloudCircleOutline, trashOutline, router}
+    return {cloudCircleOutline, trashOutline, router, cloudOfflineSharp}
   },
   async created(){
     this.loadData();
@@ -328,7 +329,11 @@ export default  {
                     key: 'datane',
                     value: JSON.stringify(vm.datane)
                 });
-      }
+      },
+         formatPrice(value) {
+        let val = (value/1).toFixed(0).replace('.', ',')
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    }
   }
 }
 </script>

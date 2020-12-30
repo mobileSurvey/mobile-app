@@ -19,7 +19,7 @@
                 <ion-row>
                   <ion-col>
                     <h5 style="margin-top:0;margin-bottom:0;color:#fff;text-align:center;">Total Anggaran Kelurahan {{dataUser.kelurahan}} </h5>
-                    <h5 style="margin-top:0;margin-bottom:0;color:#fff;text-align:center;">Tahun {{new Date().getFullYear()+1}} Sebesar Rp {{jumlahAnggaran}},-</h5>
+                    <h5 style="margin-top:0;margin-bottom:0;color:#fff;text-align:center;">Tahun {{new Date().getFullYear()+1}} Sebesar Rp {{formatPrice(jumlahAnggaran)}},-</h5>
                   </ion-col>
                 </ion-row>
 
@@ -89,7 +89,7 @@
 </template>
 
 <script >
-import { IonPage, IonContent, IonCol, IonGrid, IonRow, alertController  } from '@ionic/vue';
+import { IonPage, IonContent, IonCol, IonGrid, IonRow, alertController, IonButton  } from '@ionic/vue';
 // import doughnutChart from '../components/doughnutChart.vue';
 import { Plugins } from '@capacitor/core';
 // import { AppMinimize } from '@ionic-native/app-minimize';
@@ -101,7 +101,7 @@ import axios from 'axios';
 
 export default  {
   name: 'Tab1',
-  components: { IonContent, IonPage, IonCol, IonGrid, IonRow },
+  components: { IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
   // setup() {
     
   //   useBackButton(-1, () => {
@@ -122,7 +122,7 @@ data(){
   },
   async created(){
     
-    StatusBar.setBackgroundColor({color:'#1200d9'});
+    StatusBar.setBackgroundColor({color:'#2fafd5'});
     const ret = await Storage.get({ key: 'token' });
     this.dataUser = JSON.parse(ret.value);
     let thn = new Date().getFullYear()+1;
@@ -138,6 +138,13 @@ data(){
   methods:{
     goDataUsulan(){
         this.$router.push('/tabs/tab2')
+    },
+      goDataTertunda(){
+        this.$router.push('/tabs/tab3')
+    },
+      formatPrice(value) {
+        let val = (value/1).toFixed(0).replace('.', ',')
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     },
    async logout(){
       let vm = this;
