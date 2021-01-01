@@ -1,10 +1,15 @@
 <script>
 /* global google */
 import { Plugins } from '@capacitor/core';
-
-const { Geolocation } = Plugins;
-
+import { IonIcon } from '@ionic/vue';
+const { Geolocation, Toast } = Plugins;
+import { navigateCircleOutline } from 'ionicons/icons';
 export default {
+   setup() {
+
+      return { navigateCircleOutline };
+    },
+  components: {IonIcon  },
   props: {
     center: {
       type: Object,
@@ -64,6 +69,15 @@ export default {
     };
   },
   methods:{
+    async setCenter(){
+ let coordinates = await Geolocation.getCurrentPosition();
+     this.map.panTo(new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude));
+        this.map.setZoom(19);
+
+          await Toast.show({
+                        text: 'Berhasil '+coordinates.coords.latitude+' '+coordinates.coords.longitude
+                      });
+    },
    async inisialisasiMap(){
     //       const googleMapScript = document.createElement("SCRIPT");
     // googleMapScript.setAttribute(
@@ -217,6 +231,8 @@ if(this.center.lng===0){
 <template>
 <div class="box">
   <div id="map"></div>
+  <ion-icon @click="setCenter()" style="color:yellow;font-size: 70px;width:45px;position:absolute;left:0;right:0;top:0;margin:auto"   :icon="navigateCircleOutline"></ion-icon>
+         
   <img src="../assets/pin.png" alt=""  style="width:32px;position:absolute;left:0;right:0;top:0;bottom:30px;margin:auto">
 </div>
   

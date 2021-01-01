@@ -17,13 +17,13 @@
     
       <ion-list v-if="datane.length>0">
            
-        <ion-item  v-for="(item, i) in datane" :key="item.id">
+        <ion-item    v-for="(item, i) in datane" :key="item.id">
       
           <ion-avatar slot="start">
             <!-- <img src="../assets/list.png"> -->
               <ion-icon :icon="cloudOfflineSharp"  style="color: #2fafd5; font-size: 45px;" />
           </ion-avatar>
-          <ion-label>
+          <ion-label @click="$router.push('/formTertunda/'+item.id)">
             <h3><strong>{{item.kegiatanPrioritas}}</strong></h3>
             <h3>{{item.alamat}}</h3>
             <p>Kelurahan: {{item.kel}}</p>
@@ -249,7 +249,7 @@ export default  {
      const router = useRouter();
     return {cloudCircleOutline, trashOutline, router, cloudOfflineSharp}
   },
-  async created(){
+  async mounted(){
     this.loadData();
   },
   methods:{

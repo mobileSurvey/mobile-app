@@ -6,6 +6,7 @@
       <div style="width:100%;height:300px;background-color:;position:relative">
         <ion-buttons slot="start" style="position:absolute;top:10px;left:10px;z-index:1000">
         <ion-back-button defaultHref="/tabs/tab2" style="color:#fff;font-weight:bold" :text="'Kembali'"></ion-back-button>
+ 
          </ion-buttons>
             <Gmap
     v-if="mapShow"
@@ -58,10 +59,31 @@
              <ion-select-option v-for="item in kel" :key="item.id_kelurahan">{{item.nama_kelurahan}}</ion-select-option>
           </ion-select>
         </ion-item>
-
+         <ion-item>
+        <ion-label position="floating">Untuk panjang,lebar,tinggi dan volume diisi dengan angka</ion-label>
+      <ion-label position="floating">isi dengan angka 0 apabila tidak ada</ion-label>
+      <ion-label position="floating">gunakan . (titik) jida terdapat angka decimal</ion-label>
+     
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Panjang</ion-label>
+        <ion-input type="text" v-model="datane.panjang" @keyup="hitungVolume"></ion-input>
+      </ion-item>
+        <ion-item>
+        <ion-label position="floating">Lebar </ion-label>
+        <ion-input type="text" v-model="datane.lebar" @keyup="hitungVolume"></ion-input>
+      </ion-item>
+        <ion-item>
+        <ion-label position="floating">Tinggi </ion-label>
+        <ion-input type="text" v-model="datane.tinggi" @keyup="hitungVolume" ></ion-input>
+      </ion-item>
       <ion-item>
         <ion-label position="floating">Volume</ion-label>
         <ion-input type="text" v-model="datane.volume"></ion-input>
+      </ion-item>
+       <ion-item>
+        <ion-label position="floating">Satuan</ion-label>
+        <ion-input type="text" v-model="datane.satuan"></ion-input>
       </ion-item>
     <ion-item>
           <ion-label>Jenis Anggaran</ion-label>
@@ -174,54 +196,89 @@ export default  {
         .create({
           cssClass: 'my-custom-class',
           message: 'Mohon Tunggu...',
+          duration: 10000,
         });
 
       await loading.present();
-        let kecamatan = await   axios.get(vm.$ipBackend+'/kegiatan/kec/')
-               vm.kec = kecamatan.data
-         let kelurahan = await   axios.get(vm.$ipBackend+'/kegiatan/kel/0')
-               vm.kel = kelurahan.data
-          let jenis = await   axios.get(vm.$ipBackend+'/jenis/listforapp')
-             vm.jenis = jenis.data.respon
-             console.log( vm.jenis)
-        axios.post(vm.$ipBackend+'/kegiatan/list/'+this.$route.params.id)
-              .then(async function (response) {
-          
-                 vm.datane = response.data.respon[0]
-                //  console.log(vm.datane.foto1)
+        let kecamatan = await Storage.get({ key: 'kecamatan' });
+               vm.kec = JSON.parse(kecamatan.value)
+         let kelurahan =  await Storage.get({ key: 'kelurahan' });
+               let seluruhKel = JSON.parse(kelurahan.value)
+            
+          let jenis = await Storage.get({ key: 'jenis' });
+             vm.jenis = JSON.parse(jenis.value)
+            
+      let kegiatan = await Storage.get({ key: 'kegiatan' });
+            let kegiatanJson = JSON.parse(kegiatan.value)
+
+
+          kegiatanJson.forEach(function(itm){
+            if(itm.id == vm.$route.params.id){
+               vm.datane = itm
+                  console.log(vm.datane)
                    vm.datane.kesesuaian =   vm.datane.kesesuaian.toString()
-                 console.log(vm.datane)
-                 if(response.data.respon[0].SHAPE){
-                     vm.datane.xe = response.data.respon[0].SHAPE.coordinates[0]
-                      vm.datane.ye = response.data.respon[0].SHAPE.coordinates[1]
-                      vm.center = { lat: response.data.respon[0].SHAPE.coordinates[1], lng: response.data.respon[0].SHAPE.coordinates[0]}
+             
+                 if(itm.SHAPE){
+                     vm.datane.xe = itm.SHAPE.coordinates[0]
+                      vm.datane.ye = itm.SHAPE.coordinates[1]
+                      vm.center = { lat: itm.SHAPE.coordinates[1], lng: itm.SHAPE.coordinates[0]}
                  }
                  vm.mapShow = true;
                  loading.dismiss()
 
                 if(vm.datane.kec){
-                      axios.get(vm.$ipBackend+'/kegiatan/kel/'+vm.datane.kec)
-                                    .then(function (responsee) {
-                                        // console.log(responsee)
-                                        vm.kel = responsee.data
-                                    
-                                    })
+                  let tampung = []
+                  seluruhKel.forEach(function(itmm){
+                    if(itmm.kec == vm.datane.kec){
+                      tampung.push(itmm)
+                    }
+                  })
+                  vm.kel = tampung;
                 }
+            }
+               
+          })
+          
+               
                 
+    loading.dismiss()
 
-
-              })
-              .catch(function (error) {
-                   console.log(error)
-                   loading.dismiss()
-              });
+           
 
              
              
   },
   methods:{
-      
+      hitungVolume(){
+        let vm = this;
+           let v = 0
+      if(vm.datane.tinggi!='0'){
+         v =  vm.datane.panjang * vm.datane.lebar * vm.datane.tinggi
+         vm.datane.satuan = 'm3'
+      }else{
+         v =  vm.datane.panjang * vm.datane.lebar
+          vm.datane.satuan = 'm2'
+      }
+     vm.datane.volume = v.toFixed(2)
+    
+      },
       async simpan(){
+           let vm = this;
+             let kegiatan = await Storage.get({ key: 'kegiatan' });
+            let kegiatanJson = JSON.parse(kegiatan.value)
+            kegiatanJson.forEach(function(itm,idxx){
+            if(itm.id == vm.$route.params.id){
+              kegiatanJson[idxx] = vm.datane;
+                      kegiatanJson[idxx].SHAPE.coordinates[0] =  vm.datane.xe
+                       kegiatanJson[idxx].SHAPE.coordinates[1] =  vm.datane.ye
+            }
+          })
+
+           await Storage.set({
+                    key: 'kegiatan',
+                    value: JSON.stringify(kegiatanJson)
+                });
+
           let status = await Network.getStatus();
           console.log(status)
       let loading = await loadingController
@@ -231,7 +288,7 @@ export default  {
         });
 
       await loading.present();
-          let vm = this;
+       
            let ret = await Storage.get({ key: 'token' });
                 let user = JSON.parse(ret.value);
           if(status.connected){
@@ -256,13 +313,33 @@ export default  {
               });
           }else{
             //   await Storage.remove({key: 'datane'})
-                let ret = await Storage.get({ key: 'datane' });
-                let datanya = JSON.parse(ret.value);
+                let rett = await Storage.get({ key: 'datane' });
+                let datanya = JSON.parse(rett.value);
                  console.log(datanya)
                 if(!datanya){
                     datanya = []
+                         let t = vm.datane
+                  t.SHAPE.coordinates[0] =  vm.datane.xe
+                       t.SHAPE.coordinates[1] =  vm.datane.ye
+                        datanya.push(t);
+                }else{
+                  let fg = 0
+                    datanya.forEach(function(itm, idx){
+                  if(itm.id== vm.datane.id){
+                    fg =1;
+                      datanya[idx] = vm.datane;
+                      datanya[idx].SHAPE.coordinates[0] =  vm.datane.xe
+                       datanya[idx].SHAPE.coordinates[1] =  vm.datane.ye
+                  }
+                })
+                if(fg==0){
+                  let t = vm.datane
+                  t.SHAPE.coordinates[0] =  vm.datane.xe
+                       t.SHAPE.coordinates[1] =  vm.datane.ye
+                        datanya.push(t);
                 }
-                datanya.push(vm.datane);
+                }
+          
                
                 await Storage.set({
                     key: 'datane',
@@ -289,21 +366,26 @@ export default  {
        
       },
 
-     gantiKec(e){
+    async gantiKec(e){
         
           let vm = this
-
-                 axios.get(vm.$ipBackend+'/kegiatan/kel/'+e.target.value)
-              .then(async function (responsee) {
-                // console.log(responsee)
-                 vm.kel = responsee.data
-             
-              })
+             let kelurahan =  await Storage.get({ key: 'kelurahan' });
+               let seluruhKel = JSON.parse(kelurahan.value)
+            
+            let tampung = []
+                  seluruhKel.forEach(function(itmm){
+                    if(itmm.kec == e.target.value){
+                      tampung.push(itmm)
+                    }
+                  })
+                  vm.kel = tampung;
+              
       },
 
         ganticenter(v){
         this.datane.xe = v.lng;
          this.datane.ye = v.lat;
+        
       },
   
      async ambilGambar(jen){

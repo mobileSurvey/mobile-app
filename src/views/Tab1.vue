@@ -61,10 +61,10 @@
               <h4 style="margin-top:0;margin-bottom:0;text-align:center">PROGRES KEGIATAN TAHUN {{new Date().getFullYear()+1}}</h4>
 
               <div style="width:100%;height:20px;background-color:#e0e0e0;border-top-left-radius: 10px;border-bottom-left-radius: 10px;border-top-right-radius: 10px;border-bottom-right-radius: 10px;margin-top:15px;position:relative;">
-                <div :style="{width: (totalApproval*100)/totalKegiatan+'%' }" style="height:20px;background-color:#1200d9;border-top-left-radius: 10px;border-bottom-left-radius: 10px;border-top-right-radius: 10px;border-bottom-right-radius: 10px;overflow:hidden">
+                <div :style="{width: resume+'%' }" style="height:20px;background-color:#1200d9;border-top-left-radius: 10px;border-bottom-left-radius: 10px;border-top-right-radius: 10px;border-bottom-right-radius: 10px;overflow:hidden">
                   <div style="position:relative">
                     <div style="position:absolute;right:0;bottom:0;top:0;margin:auto;color:#fff;padding-left:5px;padding-right:5px;">
-                      <h6 style="margin-top:2.5px;margin-bottom:0;font-size:14px"><strong>{{((totalApproval*100)/totalKegiatan).toFixed(2)}}%</strong></h6>
+                      <h6 style="margin-top:2.5px;margin-bottom:0;font-size:14px"><strong>{{resume}}%</strong></h6>
                     </div>
                   </div>
                 </div>
@@ -116,12 +116,14 @@ data(){
        dataUser: {},
        jumlahAnggaran: 0,
        totalApproval:0,
-       totalKegiatan:0
+       totalKegiatan:0,
+       resume:0
     }
    
   },
   async created(){
-    
+    let vm = this;
+      
     StatusBar.setBackgroundColor({color:'#2fafd5'});
     const ret = await Storage.get({ key: 'token' });
     this.dataUser = JSON.parse(ret.value);
@@ -134,6 +136,38 @@ data(){
        let totalKegiatann = await   axios.get(this.$ipBackend+'/kegiatan/totalkegiatan/'+thn+'/'+this.dataUser.kelurahan)
                this.totalKegiatan = totalKegiatann.data[0].totalKegiatan
                console.log((this.totalApproval*100)/this.totalKegiatan)
+
+               if(isNaN((this.totalApproval*100)/this.totalKegiatan)){
+                 this.resume=0
+                 }else{
+                  this.resume=((this.totalApproval*100)/this.totalKegiatan).toFixed(2)
+                 }
+  let kec = await Storage.get({ key: 'kecamatan' });
+ if(!kec.value){
+  let kecamatan = await   axios.get(vm.$ipBackend+'/kegiatan/kec/')
+              await Storage.set({
+                    key: 'kecamatan',
+                    value: JSON.stringify(kecamatan.data)
+                });
+ }
+  let kel = await Storage.get({ key: 'kelurahan' });
+  if(!kel.value){
+         let kelurahan = await   axios.get(vm.$ipBackend+'/kegiatan/kel/0')
+               await Storage.set({
+                    key: 'kelurahan',
+                    value: JSON.stringify(kelurahan.data)
+                });
+  }
+  let jen = await Storage.get({ key: 'jenis' });
+  if(!jen.value){
+          let jenis = await   axios.get(vm.$ipBackend+'/jenis/listforapp')
+             await Storage.set({
+                    key: 'jenis',
+                    value: JSON.stringify(jenis.data.respon)
+                });
+  }
+
+
   },
   methods:{
     goDataUsulan(){
