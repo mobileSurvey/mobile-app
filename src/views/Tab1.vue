@@ -5,11 +5,11 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <div style="width:100%;background-color:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;flex-direction:column;height:200px;border-radius:10px;position:relative">
+              <div style="width:100%;background-color:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;flex-direction:column;height:220px;border-radius:10px;position:relative">
                 <ion-row>
                   <ion-col>
                     <center>  
-                      <img src="../assets/user.png" alt="" style="width:80px;height:80px">
+                      <img src="../assets/logo.png" alt="" style="width:80px;height:112px;margin-top:20px">
                       <h4 style="text-transform:capitalize;color:#fff;font-weight:bold;margin-top:0;margin-bottom:0"><strong>Hi, {{dataUser.username}}</strong></h4>
                     </center>
                     
@@ -30,10 +30,10 @@
            
           </ion-row>
         </ion-grid>
-        <ion-grid style="position:absolute;left:0;right:0;bottom:-50px;">
+        <ion-grid style="position:absolute;left:0;right:0;bottom:-70px;">
           <ion-row>
             <ion-col>
-              <div style="background-color:#fff;border-radius:10px;box-shadow:0 7px 20px 0 rgba(0,0,0,.2)">
+              <div style="background-color:#fff;border-radius:10px;box-shadow:0 7px 20px 0 rgba(0,0,0,.2); ">
                 <ion-row>
                   <ion-col style="padding-right:0;">
                     <div @click="goDataUsulan" style="width:100%;height:70px;background-color:;display:flex;flex-direction:column;justify-content:center;align-items:center;border-right:1px solid #e0e0e0">
@@ -158,14 +158,9 @@ data(){
                     value: JSON.stringify(kelurahan.data)
                 });
   }
-  let jen = await Storage.get({ key: 'jenis' });
-  if(!jen.value){
-          let jenis = await   axios.get(vm.$ipBackend+'/jenis/listforapp')
-             await Storage.set({
-                    key: 'jenis',
-                    value: JSON.stringify(jenis.data.respon)
-                });
-  }
+
+      
+  
 
 
   },

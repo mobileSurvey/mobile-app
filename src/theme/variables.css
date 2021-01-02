@@ -9,6 +9,7 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+
   --ion-font-family:"Mukta";
   /** primary **/
   --ion-color-primary: #2fafd5;

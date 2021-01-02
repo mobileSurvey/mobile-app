@@ -58,6 +58,12 @@
              <ion-select-option v-for="item in kel" :key="item.id_kelurahan">{{item.nama_kelurahan}}</ion-select-option>
           </ion-select>
         </ion-item>
+          <ion-item >
+          <ion-label>SSH</ion-label>
+          <ion-select value="" v-model="datane.sshId" @ionChange="gantiSsh($event)">
+             <ion-select-option v-for="item in ssh" :key="item.id" :value="item.id" >{{item.nama}}</ion-select-option>
+          </ion-select>
+        </ion-item>
          <ion-item>
         <ion-label position="floating">Untuk panjang,lebar,tinggi dan volume diisi dengan angka</ion-label>
       <ion-label position="floating">isi dengan angka 0 apabila tidak ada</ion-label>
@@ -65,20 +71,20 @@
      
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Panjang</ion-label>
-        <ion-input type="text" v-model="datane.panjang" @keyup="hitungVolume"></ion-input>
+        <ion-label position="floating">Panjang (m)</ion-label>
+        <ion-input type="number" v-model="datane.panjang" @keyup="hitungVolume"></ion-input>
       </ion-item>
         <ion-item>
-        <ion-label position="floating">Lebar </ion-label>
-        <ion-input type="text" v-model="datane.lebar" @keyup="hitungVolume"></ion-input>
+        <ion-label position="floating">Lebar (m)</ion-label>
+        <ion-input type="number" v-model="datane.lebar" @keyup="hitungVolume"></ion-input>
       </ion-item>
         <ion-item>
-        <ion-label position="floating">Tinggi </ion-label>
-        <ion-input type="text" v-model="datane.tinggi" @keyup="hitungVolume" ></ion-input>
+        <ion-label position="floating">Tinggi (m)</ion-label>
+        <ion-input type="number" v-model="datane.tinggi" @keyup="hitungVolume" ></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="floating">Volume</ion-label>
-        <ion-input type="text" v-model="datane.volume"></ion-input>
+        <ion-input type="number" v-model="datane.volume"></ion-input>
       </ion-item>
        <ion-item>
         <ion-label position="floating">Satuan</ion-label>
@@ -94,23 +100,10 @@
         </ion-item>
       <ion-item>
         <ion-label position="floating">Jumlah Anggaran</ion-label>
-        <ion-input type="text" v-model="datane.jumlahAnggaran"></ion-input>
+        <ion-input type="number" v-model="datane.jumlahAnggaran"></ion-input>
       </ion-item>
 
-     
-      <ion-item>
-        <ion-label position="floating">Pelaksana</ion-label>
-        <ion-input type="text" v-model="datane.pelaksana"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Kesesuaian Dengan PERWALI</ion-label>
     
-         <ion-select  v-model="datane.kesesuaian">
-            <ion-select-option value='1'>Ya</ion-select-option>
-            <ion-select-option value='0'>Tidak</ion-select-option>
-          </ion-select>
-      </ion-item>
 
       <ion-item>
         <ion-label position="floating">Keterangan</ion-label>
@@ -178,6 +171,7 @@ export default  {
       kec:[],
       kel:[],
       jenis:[],
+         ssh:[],
       center : { lat: 0, lng: 0},
       mapShow: false
     }
@@ -257,8 +251,27 @@ export default  {
          v =  vm.datane.panjang * vm.datane.lebar
           vm.datane.satuan = 'm2'
       }
+         if(vm.datane.sshId){
+        vm.ssh.forEach(function(itm){
+          if(itm.id==vm.datane.sshId){
+            vm.datane.jumlahAnggaran = v * itm.harga;
+            // vm.datane.satuan = itm.satuan
+          }
+        })
+      }
      vm.datane.volume = v.toFixed(2)
     
+      },
+          gantiSsh(e){
+         let vm = this;
+          if(e.target.value){
+              vm.ssh.forEach(function(itm){
+              if(itm.id==e.target.value){
+                vm.datane.sshId = itm.id
+                vm.hitungVolume();
+              }
+            })
+          }
       },
       async simpan(){
           let status = await Network.getStatus();

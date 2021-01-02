@@ -17,8 +17,8 @@
           </ion-select>
         </ion-item>
           <ion-item>
-          <ion-label>Sinkronisasi Data</ion-label>
-         <ion-button @click="loadData()" color="tertiary">SYNC</ion-button>
+           <ion-button @click="refresh()" color="success">Refresh</ion-button>
+         <ion-button @click="loadData()" style="margin-left:200px;" color="tertiary">Sinkronisasi</ion-button>
         </ion-item>
          <ion-progress-bar color="primary" :value="persen"></ion-progress-bar>
         <ion-refresher slot="fixed" @ionRefresh="refresh($event)">
@@ -268,6 +268,8 @@ export default  {
   async created(){
    
     let vm = this;
+      let ret = await Storage.get({ key: 'token' });
+                vm.user = JSON.parse(ret.value);
   var d = new Date();
   var tahunnya = d.getFullYear()+1;
   vm.tahun = tahunnya.toString();
@@ -288,12 +290,12 @@ export default  {
     },
    async loadData(){
          let vm = this;
-
+   
           const alert = await alertController
         .create({
           cssClass: 'my-custom-class',
           header: 'Perhatian!',
-          message: 'Proses sinkronisasi dan pergantian tahun membutuhkan <strong>Internet</strong>!!!',
+          message: 'Apakah anda yakin akan melakukan sinkronisasi?',
           buttons: [
             {
               text: 'Tidak',
@@ -306,9 +308,23 @@ export default  {
             {
               text: 'Ya',
               handler: async () => {
+                    let jenis = await   axios.get(vm.$ipBackend+'/jenis/listforapp')
+             await Storage.set({
+                    key: 'jenis',
+                    value: JSON.stringify(jenis.data.respon)
+                });
+  
+
+ 
+          let sshe = await   axios.get(vm.$ipBackend+'/ssh/jsonSSH')
+    
+             await Storage.set({
+                    key: 'ssh',
+                    value: JSON.stringify(sshe.data)
+                });
+
                 vm.datane = []
-                  let ret = await Storage.get({ key: 'token' });
-                vm.user = JSON.parse(ret.value);
+             
              axios.get(vm.$ipBackend+'/kegiatan/listforapp/'+vm.tahun+'/'+vm.user.kelurahan, {
               onDownloadProgress: (progressEvent) => {
                 let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -341,6 +357,7 @@ export default  {
     },
     async refresh(e){
        let vm = this;
+       vm.datane =[]
        let keg= await Storage.get({ key: 'kegiatan' });
                     vm.datane = JSON.parse(keg.value)
        if(e){
