@@ -13,6 +13,7 @@
     "@capacitor/android": "^2.4.2",
     "@capacitor/core": "2.4.2",
     "@capacitor/ios": "^2.4.2",
+    "@ionic-native/background-mode": "^5.30.0",
     "@ionic-native/core": "^5.29.0",
     "@ionic-native/google-maps": "^5.5.0",
     "@ionic-native/photo-viewer": "^5.30.0",

@@ -68,25 +68,25 @@
         </ion-item>
          <ion-item>
         <ion-label position="floating">Untuk panjang,lebar,tinggi dan volume diisi dengan angka</ion-label>
-      <ion-label position="floating">isi dengan angka 0 apabila tidak ada</ion-label>
-      <ion-label position="floating">gunakan . (titik) jida terdapat angka decimal</ion-label>
+      <ion-label position="floating">dan isi dengan angka 0 apabila tidak ada</ion-label>
+  
      
       </ion-item>
       <ion-item>
         <ion-label position="floating">Panjang (m)</ion-label>
-        <ion-input type="number" v-model="datane.panjang" @keyup="hitungVolume"></ion-input>
+        <ion-input type="number" v-model="datane.panjang" @ionInput="gantiPanjang($event)"></ion-input>
       </ion-item>
         <ion-item>
         <ion-label position="floating">Lebar (m)</ion-label>
-        <ion-input type="number" v-model="datane.lebar" @keyup="hitungVolume" :placeholder="0"></ion-input>
+        <ion-input type="number" v-model="datane.lebar" @ionInput="gantiLebar($event)" :placeholder="0"></ion-input>
       </ion-item>
         <ion-item>
         <ion-label position="floating">Tinggi (m)</ion-label>
-        <ion-input type="number" v-model="datane.tinggi" @keyup="hitungVolume" :placeholder="0"></ion-input>
+        <ion-input type="number" v-model="datane.tinggi" @ionInput="gantiTinggi($event)" :placeholder="0"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="floating">Volume</ion-label>
-        <ion-input type="number" v-model="datane.volume" :placeholder="0"></ion-input>
+        <ion-input type="number" v-model="datane.volume" @ionInput="gantiVolume($event)" :placeholder="0"></ion-input>
       </ion-item>
        <ion-item>
         <ion-label position="floating">Satuan</ion-label>
@@ -164,6 +164,7 @@ import axios from 'axios';
  import { useRouter } from 'vue-router';
 import { Plugins, CameraResultType ,CameraSource } from '@capacitor/core';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
+
 const { Network, Storage, Camera, Toast  } = Plugins;
 
 
@@ -283,7 +284,30 @@ export default  {
      vm.datane.volume = v.toFixed(2)
     
       },
-
+      gantiPanjang(e){
+        this.datane.panjang = e.target.value;
+        this.hitungVolume();
+      },
+      gantiLebar(e){
+         this.datane.lebar = e.target.value;
+        this.hitungVolume();
+      },
+      gantiTinggi(e){
+         this.datane.tinggi = e.target.value;
+        this.hitungVolume();
+      },
+      gantiVolume(e){
+        let vm = this;
+         this.datane.volume = e.target.value;
+         if(vm.datane.sshId){
+        vm.ssh.forEach(function(itm){
+          if(itm.id==vm.datane.sshId){
+            vm.datane.jumlahAnggaran = vm.datane.volume * itm.harga;
+            // vm.datane.satuan = itm.satuan
+          }
+        })
+      }
+      },
       gantiSsh(e){
          let vm = this;
           if(e.target.value){
