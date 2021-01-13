@@ -401,9 +401,22 @@ export default  {
 }
 </script>
 
-<style scoped>
+<style >
 .box{
   /* padding: 30px 15px; */
 }
+.select-full-width {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+}
 
+.alert-wrapper.sc-ion-alert-md{
+  width: 700% !important;
+}
+
+.alert-radio-label.sc-ion-alert-md{
+  text-overflow:unset;
+  white-space: unset;
+}
 </style>

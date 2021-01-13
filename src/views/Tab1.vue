@@ -93,7 +93,7 @@ import { IonPage, IonContent, IonCol, IonGrid, IonRow, alertController, IonButto
 // import doughnutChart from '../components/doughnutChart.vue';
 import { Plugins } from '@capacitor/core';
 // import { AppMinimize } from '@ionic-native/app-minimize';
-const { Storage, StatusBar  } = Plugins;
+const { Storage  } = Plugins;
 import axios from 'axios';
 
 // set status bar to white
@@ -121,11 +121,12 @@ data(){
     }
    
   },
-  async created(){
+  async mounted(){
     let vm = this;
-      
-    StatusBar.setBackgroundColor({color:'#2fafd5'});
+      console.log('hehe')
+    // StatusBar.setBackgroundColor({color:'#2fafd5'});
     const ret = await Storage.get({ key: 'token' });
+    //  console.log(ret.value)
     this.dataUser = JSON.parse(ret.value);
     let thn = new Date().getFullYear()+1;
       let jumlahanggaran = await   axios.get(this.$ipBackend+'/kegiatan/jumlahanggaran/'+thn+'/'+this.dataUser.kelurahan)

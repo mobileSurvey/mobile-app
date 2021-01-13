@@ -79,12 +79,15 @@ export default  {
                   vm.loading = false;
                 console.log(response)
                   if(response.data.length>0){
-                       await Storage.set({
+                  Storage.set({
                     key: 'token',
                     value: JSON.stringify(response.data[0])
-                });
-                vm.pesan = '';
-               vm.$router.push('/tabs/tab1')
+                }).then(()=>{
+                     vm.pesan = '';
+              
+               vm.$router.go('/tabs/tab1')
+                })
+             
              
                 //   (route.query.tujuan)?
                 //     route.push({ path: this.$route.query.tujuan}): 

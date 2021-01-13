@@ -47,7 +47,7 @@
         </ion-item>
        <ion-item>
           <ion-label>Kecamatan</ion-label>
-          <ion-select value="" v-model="datane.kec" @ionChange="gantiKec($event)">
+          <ion-select value="" v-model="datane.kec" @ionChange="gantiKec($event)" style="width:100%!important">
             <ion-select-option v-for="item in kec" :key="item.id_kecamatan">{{item.nama_kecamatan}}</ion-select-option>
            
           </ion-select>
@@ -188,6 +188,7 @@ export default  {
      
       return { router };
     },
+  
   async created(){
       
     let vm = this;
@@ -477,7 +478,7 @@ export default  {
 }
 </script>
 
-<style scoped>
+<style>
 .box{
   /* padding: 30px 15px; */
 }
@@ -485,5 +486,14 @@ export default  {
   max-width: 100% !important;
   width: 100% !important;
   padding-left: 0 !important;
+}
+
+.alert-wrapper.sc-ion-alert-md{
+  width: 700% !important;
+}
+
+.alert-radio-label.sc-ion-alert-md{
+  text-overflow:unset;
+  white-space: unset;
 }
 </style>
