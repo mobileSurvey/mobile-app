@@ -3,12 +3,16 @@
     <ion-header>
       <ion-toolbar>
          
-        <ion-title>Data Usulan Kel {{user.kelurahan}}</ion-title>
+        <ion-title v-if="user.role=='Surveyor'">Data Usulan Kel {{user.kelurahan}}</ion-title>
+        <ion-title v-else>Data Usulan {{user.username}}</ion-title>
           
    
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
+       <ion-fab vertical="bottom" v-if="user.role=='Dewan' && openTambah" horizontal="end" slot="fixed">
+      <ion-fab-button @click="$router.push('/forminput')">Tambah</ion-fab-button>
+    </ion-fab>
       <ion-item>
           <ion-label>Tahun</ion-label>
           <ion-select  :value="tahun" @ionChange="gantiTahun($event.target)">
@@ -18,7 +22,7 @@
         </ion-item>
           <ion-item>
            <ion-button @click="refresh()" color="success">Refresh</ion-button>
-         <ion-button @click="loadData()" style="margin-left:200px;" color="tertiary">Sinkronisasi</ion-button>
+         <ion-button @click="loadData()" style="margin-left:180px;" color="tertiary">Sinkronisasi</ion-button>
         </ion-item>
          <ion-progress-bar color="primary" :value="persen"></ion-progress-bar>
         <ion-refresher slot="fixed" @ionRefresh="refresh($event)">
@@ -36,15 +40,18 @@
       
           <ion-avatar slot="start">
             <!-- <img src="../assets/list.png"> -->
-             <ion-icon :icon="hammerSharp"  style="color: #2fafd5; font-size: 45px;" />
+             <ion-icon :icon="hammerSharp"  style="color: rgb(255, 187, 0); font-size: 45px;" />
           </ion-avatar>
           <ion-label>
             <h3><strong>{{item.kegiatanPrioritas}}</strong></h3>
             <h3>{{item.alamat}}</h3>
             <p>Kelurahan: {{item.kel}}</p>
             <p>Anggaran: {{formatPrice(item.jumlahAnggaran)}}</p>
+            <p>Status: <label style="color: green;" v-if="item.tersurvey">Tersurvey</label><label style="color: red;" v-else>Belum Disurvey</label>  </p>
+            
           </ion-label>
-         <ion-icon :icon="checkmarkCircleSharp" style="color:green;font-size: 30px;" v-if="item.approval"></ion-icon>
+         <ion-icon :icon="checkmarkCircleSharp" style="color:green;font-size: 30px;" v-if="item.approval==1"></ion-icon>
+          <ion-icon :icon="closeCircleSharp" style="color:red;font-size: 30px;" v-if="item.approval==2"></ion-icon>
         </ion-item>
      
       </ion-list>
@@ -241,37 +248,49 @@
 </template>
 
 <script lang="ts">
-import { IonButton, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect, IonIcon, alertController ,IonProgressBar   } from '@ionic/vue';
+import { IonFab, IonButton, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect, IonIcon, alertController ,IonProgressBar, IonFabButton   } from '@ionic/vue';
 import axios from 'axios';
  import { useRouter } from 'vue-router';
 import { Plugins } from '@capacitor/core';
-import { hammerSharp, checkmarkCircleSharp } from 'ionicons/icons';
+import { hammerSharp, checkmarkCircleSharp,closeCircleSharp } from 'ionicons/icons';
 const { Storage } = Plugins;
 
 
 export default  {
   name: 'Tab2',
-  components: {IonButton, IonProgressBar , IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect, IonIcon  },
+  components: {IonFab, IonFabButton, IonButton, IonProgressBar , IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonList, IonRefresher, IonRefresherContent, IonAvatar, IonLabel, IonItem,IonSelectOption,   IonSkeletonText, IonSelect, IonIcon  },
   data(){
     return {
       datane: [],
       tahun: '2021',
       user: {},
-      persen: 0.00
+      persen: 0.00,
+      openTambah: true
     }
   },
    setup() {
       const router = useRouter();
      
-      return { router, hammerSharp,checkmarkCircleSharp };
+      return { router, hammerSharp,checkmarkCircleSharp, closeCircleSharp };
     },
   async created(){
    
     let vm = this;
+     let hsl = await   axios.get(vm.$ipBackend+'/waktu/checkWaktuDewan');
+    //  console.log(hsl.data.message);
+     vm.openTambah = hsl.data.message
+
       let ret = await Storage.get({ key: 'token' });
                 vm.user = JSON.parse(ret.value);
+                    var tahunnya = await Storage.get({ key: 'tahun' });
+                tahunnya = JSON.parse(tahunnya.value);
+                // console.log(tahunnya, 'tahunnya');
+                
   var d = new Date();
-  var tahunnya = d.getFullYear()+1;
+  if(!tahunnya){
+
+    tahunnya = d.getFullYear()+1;
+  }
   vm.tahun = tahunnya.toString();
   let keg = await Storage.get({ key: 'kegiatan' });
   console.log(keg)
@@ -324,8 +343,12 @@ export default  {
                 });
 
                 vm.datane = []
-             
-             axios.get(vm.$ipBackend+'/kegiatan/listforapp/'+vm.tahun+'/'+vm.user.kelurahan, {
+             console.log(vm.user);
+             let ur = vm.$ipBackend+'/kegiatan/listforappdewan/'+vm.tahun+'/'+vm.user.dewanId
+             if(vm.user.role=='Surveyor'){
+               ur = vm.$ipBackend+'/kegiatan/listforapp/'+vm.tahun+'/'+vm.user.kelurahan
+             }
+             axios.get(ur, {
               onDownloadProgress: (progressEvent) => {
                 let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
               vm.persen =percentCompleted/100
@@ -340,7 +363,15 @@ export default  {
                     value: JSON.stringify(response.data.respon)
                 });
                     let keg= await Storage.get({ key: 'kegiatan' });
-                    vm.datane = JSON.parse(keg.value)
+                  
+                    keg.value = JSON.parse(keg.value)
+                    
+                    keg.value.forEach((element,ind) => {
+                      keg.value[ind].foto1="";
+                      keg.value[ind].foto2="";
+                      keg.value[ind].foto3="";
+                    });
+                    vm.datane = keg.value
                 }
                
               })
@@ -359,7 +390,14 @@ export default  {
        let vm = this;
        vm.datane =[]
        let keg= await Storage.get({ key: 'kegiatan' });
-                    vm.datane = JSON.parse(keg.value)
+                      keg.value = JSON.parse(keg.value)
+                    
+                    keg.value.forEach((element,ind) => {
+                      keg.value[ind].foto1="";
+                      keg.value[ind].foto2="";
+                      keg.value[ind].foto3="";
+                    });
+                    vm.datane = keg.value
        if(e){
            e.target.complete();
        }
@@ -367,6 +405,10 @@ export default  {
     },
     gantiTahun(e){
       this.tahun = e.value;
+       Storage.set({
+                    key: 'tahun',
+                    value: e.value
+                })
       this.loadData();
     }
   }

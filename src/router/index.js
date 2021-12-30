@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import Tabs from '../views/Tabs.vue'
 import Form from '../views/Form.vue';
+import FormInput from '../views/FormInput.vue';
 import FormTertunda from '../views/FormTertunda.vue';
 const routes = [
   {
@@ -26,6 +27,14 @@ const routes = [
     // redirect: '/tabs/tab1'
     name: 'form',
     component: Form,
+  
+  
+  },
+  {
+    path: '/forminput',
+    // redirect: '/tabs/tab1'
+    name: 'forminput',
+    component: FormInput,
   
   
   },

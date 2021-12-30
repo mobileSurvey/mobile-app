@@ -29,6 +29,13 @@
   />
       </div>
 <div class="box">
+       <ion-item>
+          <ion-label>Tahun</ion-label>
+          <ion-select  v-model="datane.tahun">
+            <ion-select-option v-for="x in 50" :key="x">{{x+2019}}</ion-select-option>
+      
+          </ion-select>
+        </ion-item>
       <ion-item>
         <ion-label position="floating">Kegiatan</ion-label>
         <ion-input type="text" v-model="datane.kegiatanPrioritas"></ion-input>
@@ -113,36 +120,34 @@
         <ion-label position="floating">Keterangan</ion-label>
         <ion-textarea v-model="datane.keterangan"></ion-textarea>
       </ion-item>
-           <ion-item>
-        <ion-text position="floating">Contact Person: {{datane.cp}}</ion-text>
-       
+        <ion-item>
+        <ion-label position="floating">Contact Person</ion-label>
+        <ion-textarea v-model="datane.cp"></ion-textarea>
       </ion-item>
        <ion-item>
   
         <ion-button expand="block" style="margin-top:30px" @click="ambilGambar('foto1')">Foto 1</ion-button>  
-           <!-- <img v-if="datane.foto1" :src="'data:image/jpeg;base64,'+datane.foto1" style="width:150px" @click="lihatFoto('data:image/jpeg;base64,'+datane.foto1)" /> -->
-         <img v-if="datane.foto1 && internetStatus" :src="'data:image/jpeg;base64,'+datane.foto1" style="width:150px" @click="lihatFoto($ipBackend+'/foto/'+datane.foto1)" />
+           <img v-if="datane.foto1" :src="'data:image/jpeg;base64,'+datane.foto1" style="width:150px" @click="lihatFoto('data:image/jpeg;base64,'+datane.foto1)" />
        
       </ion-item>
        <ion-item>
    
              <ion-button expand="block" style="margin-top:30px" @click="ambilGambar('foto2')">Foto 2</ion-button>  
-             <img v-if="datane.foto2 && internetStatus" :src="'data:image/jpeg;base64,'+datane.foto2" style="width:150px" @click="lihatFoto($ipBackend+'/foto/'+datane.foto2)" />
-      
+           <img v-if="datane.foto2" :src="'data:image/jpeg;base64,'+datane.foto2" style="width:150px"  @click="lihatFoto('data:image/jpeg;base64,'+datane.foto2)" />
+     
          
       </ion-item>
        <ion-item>
      
               <ion-button expand="block" style="margin-top:30px" @click="ambilGambar('foto3')">Foto 3</ion-button>  
-              <img v-if="datane.foto3 && internetStatus" :src="'data:image/jpeg;base64,'+datane.foto3" style="width:150px" @click="lihatFoto($ipBackend+'/foto/'+datane.foto3)" />
-      
+           <img v-if="datane.foto3" :src="'data:image/jpeg;base64,'+datane.foto3" style="width:150px"  @click="lihatFoto('data:image/jpeg;base64,'+datane.foto3)"  />
+     
   
       </ion-item>
 
    
      
-       <ion-button expand="block" style="margin-top:30px" @click="simpan" v-if="datane.approval==0 && openEditSurveyor && user.role=='Surveyor'">Simpan</ion-button>  
-       <ion-button expand="block" style="margin-top:30px" @click="simpan" v-if="datane.approval==0 && openEditDewan && user.role=='Dewan'">Simpan</ion-button>  
+       <ion-button expand="block" style="margin-top:30px" @click="simpan" >Simpan</ion-button>  
       
       </div>
     </ion-content>
@@ -175,22 +180,18 @@ const { Network, Storage, Camera, Toast  } = Plugins;
 
 
 export default  {
-  name: 'Form',
+  name: 'FormInput',
   components: {  IonPage,  IonContent, IonButton, IonItem, IonTextarea, IonLabel, IonBackButton, IonSelectOption, IonInput, IonSelect, IonButtons, Gmap  },
    data(){
     return {
-      datane: {},
+      datane: {SHAPE:{coordinates:[]}},
       kec:[],
       kel:[],
       jenis:[],
        ssh:[],
        hargaDipilih: 0,
       center : { lat: 0, lng: 0},
-      mapShow: false,
-      internetStatus: false,
-      openEditSurveyor: true,
-      openEditDewan: true,
-      user: {}
+      mapShow: false
     }
   },
      setup() {
@@ -202,17 +203,6 @@ export default  {
   async created(){
       
     let vm = this;
-         let ret = await Storage.get({ key: 'token' });
-                vm.user = JSON.parse(ret.value);
-        let hsl = await   axios.get(vm.$ipBackend+'/waktu/checkWaktuSurveyor');
-    //  console.log(hsl.data.message);
-     vm.openEditSurveyor = hsl.data.message
-         let hsl2 = await   axios.get(vm.$ipBackend+'/waktu/checkWaktuDewan');
-    //  console.log(hsl.data.message);
-     vm.openEditDewan = hsl2.data.message
-     let status = await Network.getStatus();
-          console.log(status)
-          this.internetStatus = status.connected;
           let loading = await loadingController
         .create({
           cssClass: 'my-custom-class',
@@ -223,8 +213,8 @@ export default  {
       await loading.present();
         let kecamatan = await Storage.get({ key: 'kecamatan' });
                vm.kec = JSON.parse(kecamatan.value)
-         let kelurahan =  await Storage.get({ key: 'kelurahan' });
-               let seluruhKel = JSON.parse(kelurahan.value)
+        //  let kelurahan =  await Storage.get({ key: 'kelurahan' });
+        //        let seluruhKel = JSON.parse(kelurahan.value)
             
           let jenis = await Storage.get({ key: 'jenis' });
              vm.jenis = JSON.parse(jenis.value)
@@ -234,40 +224,8 @@ export default  {
             
           
 
-
-      let kegiatan = await Storage.get({ key: 'kegiatan' });
-            let kegiatanJson = JSON.parse(kegiatan.value)
-
-
-          kegiatanJson.forEach(function(itm){
-            if(itm.id == vm.$route.params.id){
-               vm.datane = itm
-               vm.ambilFoto(itm.id)
-                  // console.log(vm.datane)
-                   vm.datane.kesesuaian =   vm.datane.kesesuaian.toString()
-             
-                 if(itm.SHAPE){
-                     vm.datane.xe = itm.SHAPE.coordinates[0]
-                      vm.datane.ye = itm.SHAPE.coordinates[1]
-                      vm.center = { lat: itm.SHAPE.coordinates[1], lng: itm.SHAPE.coordinates[0]}
-                 }
-                 vm.mapShow = true;
-                 loading.dismiss()
-
-                if(vm.datane.kec){
-                  let tampung = []
-                  seluruhKel.forEach(function(itmm){
-                    if(itmm.kec == vm.datane.kec){
-                      tampung.push(itmm)
-                    }
-                  })
-                  vm.kel = tampung;
-                }
-            }
-               
-          })
-          
-               
+ vm.mapShow = true;
+  
                 
     loading.dismiss()
 
@@ -277,35 +235,6 @@ export default  {
              
   },
   methods:{
-   async ambilFoto(id){
-     let vm = this;
-          let status = await Network.getStatus();
-          console.log(status)
-          this.internetStatus = status.connected;
-           let ret = await Storage.get({ key: 'token' });
-                let user = JSON.parse(ret.value);
-          if(status.connected){
-               axios.post(vm.$ipBackend+'/kegiatan/list/'+id, {},{ headers:{
-                 accesstoken: user.accesstoken
-               }})
-              .then(async function (response) {
-                console.log(response)
-                if(response.data.respon.length){
-                  vm.datane.foto1 = response.data.respon[0].foto1;
-                  vm.datane.foto2 = response.data.respon[0].foto2;
-                  vm.datane.foto3 = response.data.respon[0].foto3;
-                }
-                
-              })
-              .catch(async function (error) {
-                   console.log(error)
-                   await Toast.show({
-                        text: error.message
-                      });
-                  
-              });
-          }
-    },
         formatPrice(value) {
         let val = (value/1).toFixed(0).replace('.', ',')
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -381,38 +310,32 @@ export default  {
 
       await loading.present();
        
-             let kegiatan = await Storage.get({ key: 'kegiatan' });
-            let kegiatanJson = JSON.parse(kegiatan.value)
-            kegiatanJson.forEach(function(itm,idxx){
-            if(itm.id == vm.$route.params.id){
-              kegiatanJson[idxx] = vm.datane;
-                  kegiatanJson[idxx].SHAPE = {
-                         coordinates : []
-                       }
-                      kegiatanJson[idxx].SHAPE.coordinates[0] =  vm.datane.xe
-                       kegiatanJson[idxx].SHAPE.coordinates[1] =  vm.datane.ye
-            }
-          })
+        //      let kegiatan = await Storage.get({ key: 'kegiatan' });
+        //     let kegiatanJson = JSON.parse(kegiatan.value)
+        //     kegiatanJson.forEach(function(itm,idxx){
+        //     if(itm.id == vm.$route.params.id){
+        //       kegiatanJson[idxx] = vm.datane;
+        //           kegiatanJson[idxx].SHAPE = {
+        //                  coordinates : []
+        //                }
+        //               kegiatanJson[idxx].SHAPE.coordinates[0] =  vm.datane.xe
+        //                kegiatanJson[idxx].SHAPE.coordinates[1] =  vm.datane.ye
+        //     }
+        //   })
 
-           await Storage.set({
-                    key: 'kegiatan',
-                    value: JSON.stringify(kegiatanJson)
-                });
+        //    await Storage.set({
+        //             key: 'kegiatan',
+        //             value: JSON.stringify(kegiatanJson)
+        //         });
 
           let status = await Network.getStatus();
           console.log(status)
-          this.internetStatus = status.connected;
+      
            let ret = await Storage.get({ key: 'token' });
                 let user = JSON.parse(ret.value);
-                if(user.role=='Surveyor'){
-                  vm.datane.tersurvey=1;
-                   vm.datane.role='Surveyor';
-                }else if(user.role=='Dewan'){
-                  vm.datane.tersurvey=0;
-                   vm.datane.role='Dewan';
-                }
           if(status.connected){
-               axios.post(vm.$ipBackend+'/kegiatan/update/'+this.$route.params.id, vm.datane,{ headers:{
+              vm.datane.dewanId = user.dewanId;
+               axios.post(vm.$ipBackend+'/kegiatan/insert/', vm.datane,{ headers:{
                  accesstoken: user.accesstoken
                }})
               .then(async function (response) {
@@ -433,46 +356,48 @@ export default  {
               });
           }else{
             //   await Storage.remove({key: 'datane'})
-                let rett = await Storage.get({ key: 'datane' });
-                let datanya = JSON.parse(rett.value);
-                 console.log(datanya)
-                if(!datanya){
-                    datanya = []
-                         let t = vm.datane
-                  t.SHAPE.coordinates[0] =  vm.datane.xe
-                       t.SHAPE.coordinates[1] =  vm.datane.ye
-                        datanya.push(t);
-                }else{
-                  let fg = 0
-                    datanya.forEach(function(itm, idx){
-                  if(itm.id== vm.datane.id){
-                    fg =1;
-                      datanya[idx] = vm.datane;
+                // let rett = await Storage.get({ key: 'datane' });
+                // let datanya = JSON.parse(rett.value);
+                //  console.log(datanya)
+                // if(!datanya){
+                //     datanya = []
+                //          let t = vm.datane
+                         
+                //   t.SHAPE.coordinates[0] =  vm.datane.xe
+                //        t.SHAPE.coordinates[1] =  vm.datane.ye
+                //         datanya.push(t);
+                // }else{
+                //   let fg = 0
+                //     datanya.forEach(function(itm, idx){
+                //   if(itm.id== vm.datane.id){
+                //     fg =1;
+                //       datanya[idx] = vm.datane;
                    
-                      datanya[idx].SHAPE.coordinates[0] =  vm.datane.xe
-                       datanya[idx].SHAPE.coordinates[1] =  vm.datane.ye
-                  }
-                })
-                if(fg==0){
-                  let t = vm.datane
-                  t.SHAPE.coordinates[0] =  vm.datane.xe
-                       t.SHAPE.coordinates[1] =  vm.datane.ye
-                        datanya.push(t);
-                }
-                }
+                //       datanya[idx].SHAPE.coordinates[0] =  vm.datane.xe
+                //        datanya[idx].SHAPE.coordinates[1] =  vm.datane.ye
+                //   }
+                // })
+                // if(fg==0){
+                //   let t = vm.datane
+                
+                //   t.SHAPE.coordinates[0] =  vm.datane.xe
+                //        t.SHAPE.coordinates[1] =  vm.datane.ye
+                //         datanya.push(t);
+                // }
+                // }
           
                
-                await Storage.set({
-                    key: 'datane',
-                    value: JSON.stringify(datanya)
-                });
+                // await Storage.set({
+                //     key: 'datane',
+                //     value: JSON.stringify(datanya)
+                // });
                  loading.dismiss()
 
       const alert = await alertController
         .create({
           header: 'Perhatian',
         //   subHeader: 'Perhatian',
-          message: 'Internet tidak ditemukan, data disimpan dalam memory perangkat.',
+          message: 'Internet tidak ditemukan, Coba lagi nanti.',
           buttons: [ {
               text: 'Ya',
               handler: () => {

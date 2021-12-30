@@ -25,9 +25,9 @@
                   </ion-item>
 
                   <ion-button expand="block" @click="loginn()" style="margin-top:15px">
-                  <ion-spinner name="crescent" v-if="loading"></ion-spinner>
+                  <ion-spinner name="crescent" color="dark" v-if="loading"></ion-spinner>
                   
-                  <span v-else>Login</span>
+                  <span v-else style="color:black;">Login</span>
                   </ion-button>
                 </ion-list>
               </div>
@@ -119,17 +119,20 @@ export default  {
 <style scoped>
 .box{
   padding: 30px 30px;
-  background-color: #fff;
+  background-color: #ffbb00;
   box-shadow:0 7px 20px 0 rgba(0,0,0,.2);
   border-radius: 10px;
 }
 
 .box h2{
   text-align: center;
+  color: black;
+
 }
 
 .box h3{
   text-align: center;
+    color: black;
 }
 
 :host{
@@ -139,7 +142,7 @@ export default  {
 .bg{
   width: 100%;
   height: 260px;
-  background-image: url(../assets/bg.png);
+  background-image: url(../assets/bgkuning.jpeg);
   background-size: cover;
   padding: 60px 15px;
 }

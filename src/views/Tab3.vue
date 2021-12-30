@@ -21,7 +21,7 @@
       
           <ion-avatar slot="start">
             <!-- <img src="../assets/list.png"> -->
-              <ion-icon :icon="cloudOfflineSharp"  style="color: #2fafd5; font-size: 45px;" />
+              <ion-icon :icon="cloudOfflineSharp"  style="color: rgb(255, 187, 0); font-size: 45px;" />
           </ion-avatar>
           <ion-label @click="$router.push('/formTertunda/'+item.id)">
             <h3><strong>{{item.kegiatanPrioritas}}</strong></h3>
@@ -282,6 +282,15 @@ export default  {
       await loading.present();
           let vm = this;
           if(status.connected){
+             let ret = await Storage.get({ key: 'token' });
+                let user = JSON.parse(ret.value);
+                if(user.role=='Surveyor'){
+                  item.tersurvey=1;
+                   item.role='Surveyor';
+                }else if(user.role=='Dewan'){
+                  item.tersurvey=0;
+                   item.role='Dewan';
+                }
                axios.post(vm.$ipBackend+'/kegiatan/update/'+item.id, item)
               .then(async function (response) {
                 console.log(response)

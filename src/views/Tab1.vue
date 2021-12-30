@@ -18,7 +18,8 @@
 
                 <ion-row>
                   <ion-col>
-                    <h5 style="margin-top:0;margin-bottom:0;color:#fff;text-align:center;">Total Anggaran Kelurahan {{dataUser.kelurahan}} </h5>
+                    <h5 style="margin-top:0;margin-bottom:0;color:#fff;text-align:center;" v-if="dataUser.role=='Surveyor'">Total Anggaran Kelurahan {{dataUser.kelurahan}} </h5>
+                    <h5 style="margin-top:0;margin-bottom:0;color:#fff;text-align:center;" v-else>Total Anggaran {{dataUser.username}} </h5>
                     <h5 style="margin-top:0;margin-bottom:0;color:#fff;text-align:center;">Tahun {{new Date().getFullYear()+1}} Sebesar Rp {{formatPrice(jumlahAnggaran)}},-</h5>
                   </ion-col>
                 </ion-row>
@@ -38,14 +39,14 @@
                   <ion-col style="padding-right:0;">
                     <div @click="goDataUsulan" style="width:100%;height:70px;background-color:;display:flex;flex-direction:column;justify-content:center;align-items:center;border-right:1px solid #e0e0e0">
                       <img src="../assets/list.png" alt="" style="width:30px">
-                      <h6 style="margin-top:10px;margin-bottom:0;font-weight:bold"><strong>Data Usulan </strong></h6>
+                <ion-text color="primary"> <h6 style="margin-top:10px;margin-bottom:0;font-weight:bold"><strong>Data Usulan </strong></h6></ion-text>
                     </div>
                   </ion-col>
 
                   <ion-col style="padding-left:0">
                     <div @click="goDataTertunda" style="width:100%;height:70px;background-color:;display:flex;flex-direction:column;justify-content:center;align-items:center;border-left:1px solid #e0e0e0">
                       <img src="../assets/list.png" alt="" style="width:30px">
-                      <h6 style="margin-top:10px;margin-bottom:0;font-weight:900"><strong>Usulan Tertunda</strong></h6>
+                     <ion-text color="primary"> <h6 style="margin-top:10px;margin-bottom:0;font-weight:900"><strong>Usulan Tertunda</strong></h6></ion-text>
                     </div>
                   </ion-col>
                 </ion-row>
@@ -58,10 +59,39 @@
         <ion-row>
           <ion-col>
             <div style="width:100%;padding:30px 15px;box-shadow:0 7px 20px 0 rgba(0,0,0,.2);border-radius:10px">
-              <h4 style="margin-top:0;margin-bottom:0;text-align:center">PROGRES KEGIATAN TAHUN {{new Date().getFullYear()+1}}</h4>
+              <h4 style="margin-top:0;margin-bottom:0;text-align:center">PROGRES KEGIATAN TERSURVEY TAHUN {{new Date().getFullYear()+1}}</h4>
 
               <div style="width:100%;height:20px;background-color:#e0e0e0;border-top-left-radius: 10px;border-bottom-left-radius: 10px;border-top-right-radius: 10px;border-bottom-right-radius: 10px;margin-top:15px;position:relative;">
-                <div :style="{width: resume+'%' }" style="height:20px;background-color:#1200d9;border-top-left-radius: 10px;border-bottom-left-radius: 10px;border-top-right-radius: 10px;border-bottom-right-radius: 10px;overflow:hidden">
+                <div :style="{width: resumeTersurvey+'%' }" style="height:20px;background-color:rgb(255, 187, 0);border-top-left-radius: 10px;border-bottom-left-radius: 10px;border-top-right-radius: 10px;border-bottom-right-radius: 10px;overflow:hidden">
+                  <div style="position:relative">
+                    <div style="position:absolute;right:0;bottom:0;top:0;margin:auto;color:#fff;padding-left:5px;padding-right:5px;">
+                      <h6 style="margin-top:2.5px;margin-bottom:0;font-size:14px"><strong>{{resumeTersurvey}}%</strong></h6>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="position:absolute;left:0;background-color:">
+                  <h6 style="margin-top:0;margin-bottom:0;"><strong>0%</strong></h6>
+                </div>
+
+                
+
+                <div style="position:absolute;right:0;background-color:">
+                  <h6 style="margin-top:0;margin-bottom:0;"><strong>100%</strong></h6>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row>
+          <ion-col>
+            <div style="width:100%;padding:30px 15px;box-shadow:0 7px 20px 0 rgba(0,0,0,.2);border-radius:10px">
+              <h4 style="margin-top:0;margin-bottom:0;text-align:center">PROGRES KEGIATAN DISETUJUI TAHUN {{new Date().getFullYear()+1}}</h4>
+
+              <div style="width:100%;height:20px;background-color:#e0e0e0;border-top-left-radius: 10px;border-bottom-left-radius: 10px;border-top-right-radius: 10px;border-bottom-right-radius: 10px;margin-top:15px;position:relative;">
+                <div :style="{width: resume+'%' }" style="height:20px;background-color:rgb(255, 187, 0);border-top-left-radius: 10px;border-bottom-left-radius: 10px;border-top-right-radius: 10px;border-bottom-right-radius: 10px;overflow:hidden">
                   <div style="position:relative">
                     <div style="position:absolute;right:0;bottom:0;top:0;margin:auto;color:#fff;padding-left:5px;padding-right:5px;">
                       <h6 style="margin-top:2.5px;margin-bottom:0;font-size:14px"><strong>{{resume}}%</strong></h6>
@@ -69,13 +99,13 @@
                   </div>
                 </div>
 
-                <div style="position:absolute;left:0;background-color:#fff">
+                <div style="position:absolute;left:0;">
                   <h6 style="margin-top:0;margin-bottom:0;"><strong>0%</strong></h6>
                 </div>
 
                 
 
-                <div style="position:absolute;right:0;background-color:#fff">
+                <div style="position:absolute;right:0;background-color:">
                   <h6 style="margin-top:0;margin-bottom:0;"><strong>100%</strong></h6>
                 </div>
               </div>
@@ -89,7 +119,7 @@
 </template>
 
 <script >
-import { IonPage, IonContent, IonCol, IonGrid, IonRow, alertController, IonButton  } from '@ionic/vue';
+import { IonText, IonPage, IonContent, IonCol, IonGrid, IonRow, alertController, IonButton  } from '@ionic/vue';
 // import doughnutChart from '../components/doughnutChart.vue';
 import { Plugins } from '@capacitor/core';
 // import { AppMinimize } from '@ionic-native/app-minimize';
@@ -101,7 +131,7 @@ import axios from 'axios';
 
 export default  {
   name: 'Tab1',
-  components: { IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
+  components: { IonText,IonContent, IonPage, IonCol, IonGrid, IonRow, IonButton },
   // setup() {
     
   //   useBackButton(-1, () => {
@@ -117,7 +147,8 @@ data(){
        jumlahAnggaran: 0,
        totalApproval:0,
        totalKegiatan:0,
-       resume:0
+       resume:0,
+       resumeTersurvey:0,
     }
    
   },
@@ -128,12 +159,41 @@ data(){
     const ret = await Storage.get({ key: 'token' });
     //  console.log(ret.value)
     this.dataUser = JSON.parse(ret.value);
+    console.log(this.dataUser);
     let thn = new Date().getFullYear()+1;
-      let jumlahanggaran = await   axios.get(this.$ipBackend+'/kegiatan/jumlahanggaran/'+thn+'/'+this.dataUser.kelurahan)
+    if(this.dataUser.role=='Dewan'){
+            let jumlahanggaran = await   axios.get(this.$ipBackend+'/kegiatan/jumlahanggarandewan/'+thn+'/'+this.dataUser.dewanId)
+               this.jumlahAnggaran = jumlahanggaran.data[0].totalAnggaran
+
+        let totalApprovall = await   axios.get(this.$ipBackend+'/kegiatan/totalapprovaldewan/'+thn+'/'+this.dataUser.dewanId)
+               this.totalApproval = totalApprovall.data[0].totalApproval
+
+                let totalTersurvey = await   axios.get(this.$ipBackend+'/kegiatan/totaltersurveydewan/'+thn+'/'+this.dataUser.dewanId)
+               this.totalTersurvey = totalTersurvey.data[0].totalTersurvey
+       let totalKegiatann = await   axios.get(this.$ipBackend+'/kegiatan/totalkegiatandewan/'+thn+'/'+this.dataUser.dewanId)
+               this.totalKegiatan = totalKegiatann.data[0].totalKegiatan
+               console.log((this.totalApproval*100)/this.totalKegiatan)
+
+               if(isNaN((this.totalApproval*100)/this.totalKegiatan)){
+                 this.resume=0
+                 }else{
+                  this.resume=((this.totalApproval*100)/this.totalKegiatan).toFixed(2)
+                 }
+
+                   if(isNaN((this.totalTersurvey*100)/this.totalKegiatan)){
+                 this.resumeTersurvey=0
+                 }else{
+                  this.resumeTersurvey=((this.totalTersurvey*100)/this.totalKegiatan).toFixed(2)
+                 }
+    }else{
+            let jumlahanggaran = await   axios.get(this.$ipBackend+'/kegiatan/jumlahanggaran/'+thn+'/'+this.dataUser.kelurahan)
                this.jumlahAnggaran = jumlahanggaran.data[0].totalAnggaran
 
         let totalApprovall = await   axios.get(this.$ipBackend+'/kegiatan/totalapproval/'+thn+'/'+this.dataUser.kelurahan)
                this.totalApproval = totalApprovall.data[0].totalApproval
+
+                let totalTersurvey = await   axios.get(this.$ipBackend+'/kegiatan/totaltersurvey/'+thn+'/'+this.dataUser.kelurahan)
+               this.totalTersurvey = totalTersurvey.data[0].totalTersurvey
        let totalKegiatann = await   axios.get(this.$ipBackend+'/kegiatan/totalkegiatan/'+thn+'/'+this.dataUser.kelurahan)
                this.totalKegiatan = totalKegiatann.data[0].totalKegiatan
                console.log((this.totalApproval*100)/this.totalKegiatan)
@@ -143,6 +203,14 @@ data(){
                  }else{
                   this.resume=((this.totalApproval*100)/this.totalKegiatan).toFixed(2)
                  }
+
+                   if(isNaN((this.totalTersurvey*100)/this.totalKegiatan)){
+                 this.resumeTersurvey=0
+                 }else{
+                  this.resumeTersurvey=((this.totalTersurvey*100)/this.totalKegiatan).toFixed(2)
+                 }
+    }
+
   let kec = await Storage.get({ key: 'kecamatan' });
  if(!kec.value){
   let kecamatan = await   axios.get(vm.$ipBackend+'/kegiatan/kec/')
@@ -215,7 +283,7 @@ data(){
 <style scoped>
 .bg-box{
   /* background-color: yellow; */
-  background-image: url(../assets/bg.png);
+  background-image: url(../assets/bgkuning.jpeg);
   background-size: cover;
   height: 260px;
   position: relative;
